@@ -1,7 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { isNull } from 'util';
 import { dialogflow } from 'actions-on-google';
+
+import * as database from './database';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
@@ -12,29 +13,21 @@ const STREET_ARGUMENT = "street"
 const INTERSECTION_ARGUMENT = "intersection"
 const STOP_NUMBER_ARGUMENT = "stop-number"
 
-const app = dialogflow({debug: true})
+const app = dialogflow()
 
-app.intent(CUANDO_LLEGA_INTENT, conv => {
-    const bus = conv.parameters[BUS_LINE_ARGUMENT]
+app.intent(CUANDO_LLEGA_INTENT, async conv => {
+    const bus = conv.parameters[BUS_LINE_ARGUMENT].toString()
+    console.log("Bus line: " + bus)
     const stop = conv.parameters[STOP_NUMBER_ARGUMENT]
-    if (!isNull(stop)) {
+    if (stop.toString() !== "") {
         conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos.`)
     } else {
-        const street = conv.parameters[STREET_ARGUMENT]
-        const intersection = conv.parameters[INTERSECTION_ARGUMENT]
-        db.collection('streets').where('desc', '==', street).get()
-        .then(snapshot => {
-            if (snapshot.size === 0) {
-                console.log(`Street not found in collection: ${street}`)
-            } else {
-                snapshot.forEach(doc => {
-                    console.log("Street found in streets collection: ", doc.data())
-                })
-            }
-        })
-        .catch(error => console.error(error))
-        // search for stop number...
-        conv.ask(`La línea ${bus} llega a la parada de ${street} y ${intersection} en 3 minutos.`)
+        const street = conv.parameters[STREET_ARGUMENT].toString()
+        const intersection = conv.parameters[INTERSECTION_ARGUMENT].toString()
+        const validCorner = await database.findValidCorners(db, bus, street, intersection)
+        const stops = await database.findStops(db, validCorner)
+        console.log(stops)
+        conv.ask(`La línea ${bus} llega a la parada de ${street} y ${intersection} (parada ${stops[0].number}) en 3 minutos.`)
     }
 })
 
