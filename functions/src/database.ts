@@ -1,3 +1,5 @@
+import * as removeAccents from 'remove-accents';
+
 class Street {
     constructor(public id: number, public desc: string) { }
 }
@@ -16,9 +18,11 @@ function getBusDocument(db: FirebaseFirestore.Firestore, bus: string) {
     return db.collection('buses').doc(bus).get()
 }
 
-function streetDescPredicate(streetObject: Street, street: string | Object) {
+function streetDescPredicate(streetObject: Street, street: string) {
     const desc: string = streetObject.desc
-    return desc.includes(street.toString())
+    const regExp = RegExp(`(${street}|${removeAccents.remove(street)})`)
+    // Return true if desc matches the given street name w/ and w/o accents
+    return regExp.test(desc)
 }
 
 export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: string, street: string, intersection: string) {
