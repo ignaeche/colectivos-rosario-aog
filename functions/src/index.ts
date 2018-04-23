@@ -9,7 +9,6 @@ const db = admin.firestore()
 
 const CUANDO_LLEGA_CORNER_INTENT = "cuando_llega_corner_intent"
 const CUANDO_LLEGA_STOP_INTENT = "cuando_llega_stop_intent"
-const CUANDO_LLEGA_STOP_EVENT = "cuando-llega-stop-event"
 const BUS_STOP_INTENT = "stop"
 const BUS_FOLLOWUP_CONTEXT = "bus-followup"
 const BUS_LINE_ARGUMENT = "bus-line"
