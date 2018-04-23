@@ -1,20 +1,7 @@
 import * as removeAccents from 'remove-accents';
+import { Street, StreetWithIntersections, Corner } from './models';
 
-class Street {
-    constructor(public id: number, public desc: string) { }
-}
-
-class StreetWithIntersections extends Street {
-    constructor(public id: number, public desc: string, public intersections: Array<Street>) {
-        super(id, desc)
-     }
-}
-
-class Corner {
-    constructor(public street: Street, public intersection: Street) { }
-}
-
-function getBusDocument(db: FirebaseFirestore.Firestore, bus: string) {
+export function getBusDocument(db: FirebaseFirestore.Firestore, bus: string) {
     return db.collection('buses').doc(bus).get()
 }
 
