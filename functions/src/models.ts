@@ -9,11 +9,11 @@ export class StreetWithIntersections extends Street {
 }
 
 export class StreetWithStops extends Street {
-    constructor(public id: number, public desc: string, public stops: Array<number>) {
+    constructor(public id: number, public desc: string, public stops: Array<string>) {
         super(id, desc)
     }
 }
 
 export class Corner {
-    constructor(public street: Street, public intersection: Street, public stop: number) { }
+    constructor(public street: Street, public intersection: Street, public stop: string) { }
 }

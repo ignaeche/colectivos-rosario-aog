@@ -69,7 +69,7 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async conv => {
                 description: `${cornerStreet} y ${cornerIntersection}`
             }
         });
-        conv.contexts.set(Contexts.BUS_FOLLOWUP_CONTEXT, 1, { 'bus-line': bus })
+        //conv.contexts.set(Contexts.BUS_FOLLOWUP_CONTEXT, 1, { 'bus-line': bus })
         conv.ask('Escoja una parada')
         conv.ask(new List({
             title: 'Paradas',
@@ -90,6 +90,7 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     const stop = option.toString().split('_')
     switch (stop[0]) {
         case "STOP":
+            // do conv.followup with event
             conv.ask('Seleccionaste la parada ' + stop[1])
             break;
         default:
@@ -100,25 +101,38 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
 
 app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async conv => {
     logIntent(conv)
-    console.log(conv.user.locale)
     // console.log(JSON.stringify(conv.contexts))
     const bus = conv.parameters[Args.BUS_LINE_ARGUMENT].toString()
     const stop = conv.parameters[Args.STOP_NUMBER_ARGUMENT].toString()
     
-    const doc = await database.getBusDocument(db, bus)
-    const data = doc.data()
-    if (stop in data.stops) {
-        // do request for arrival time
-        conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos`)
-        conv.contexts.delete(Contexts.BUS_FOLLOWUP_CONTEXT)
-    } else {
-        conv.ask(`La parada ${stop} no es válida para la línea ${bus}`)
+    // const busDoc = await database.getBusDocument(db, bus)
+    // const data = busDoc.data()
 
-        const context = conv.contexts.get(Contexts.BUS_FOLLOWUP_CONTEXT)
-        if (context !== undefined && context.lifespan > 0) {
-            conv.ask('Intente nuevamente')
+    return database.getBusStopDocument(db, bus, stop)
+    .then(doc => {
+        if (doc.exists) {
+            conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos`)
+        } else {
+            conv.ask(`La parada ${stop} no es válida para la línea ${bus}`)
         }
-    }
+    })
+    .catch(error => {
+        console.log(error)
+        conv.ask(`No se pudo obtener consultar el horario`)
+    })
+
+    // if (stop in data.stops) {
+        // do request for arrival time
+        // conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos`)
+        // conv.contexts.delete(Contexts.BUS_FOLLOWUP_CONTEXT)
+    // } else {
+    //     conv.ask(`La parada ${stop} no es válida para la línea ${bus}`)
+
+        // const context = conv.contexts.get(Contexts.BUS_FOLLOWUP_CONTEXT)
+        // if (context !== undefined && context.lifespan > 0) {
+        //     conv.ask('Intente nuevamente')
+        // }
+    // }
 })
 
 // Handler redirect
