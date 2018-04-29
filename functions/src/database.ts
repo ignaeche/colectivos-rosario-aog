@@ -1,5 +1,5 @@
 import * as removeAccents from 'remove-accents';
-import { Street, StreetWithIntersections, Corner } from './models';
+import { Street, StreetWithStops, StreetWithIntersections, Corner } from './models';
 
 export function getBusDocument(db: FirebaseFirestore.Firestore, bus: string) {
     return db.collection('buses').doc(bus).get()
@@ -21,10 +21,12 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
 
     streets.filter(s => streetDescPredicate(s, street))
     .forEach(s => { // forEach street s
-        const ints: Array<Street> = s.intersections
+        const ints: Array<StreetWithStops> = s.intersections
         ints.filter(i => streetDescPredicate(i, intersection))
         .forEach(i => { // forEach intersection i
-            validCorners.push(new Corner(new Street(s.id, s.desc), i))
+            i.stops.forEach(stop => { // forEach stop: make a corner with each stop
+                validCorners.push(new Corner(new Street(s.id, s.desc), new Street(i.id, i.desc), stop))
+            })
         })
     });
 
