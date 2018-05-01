@@ -1,9 +1,5 @@
 export class Street {
     constructor(public id: number, public desc: string) { }
-
-    toStreet() {
-        return this
-    }
 }
 
 export class StreetWithIntersections extends Street {

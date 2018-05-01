@@ -14,8 +14,9 @@ export function getBusStopDocument(db: FirebaseFirestore.Firestore, bus: string,
 }
 
 function streetDescPredicate(streetObject: Street, street: string) {
-    const desc: string = streetObject.desc.toUpperCase()
-    const regExp = RegExp(`(${street}|${removeAccents.remove(street)})`)
+    // replace whitespaces with wildcards on regexp
+    const desc: string = removeAccents.remove(streetObject.desc)
+    const regExp = RegExp(`(${street}|${removeAccents.remove(street)})`, 'i')
     // Return true if desc matches the given street name w/ and w/o accents
     return regExp.test(desc)
 }
@@ -48,7 +49,7 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
         streetData.intersections.filter(i => streetDescPredicate(i, intersection))
         .forEach(i => {
             i.stops.forEach(stop => {
-                validCorners.push(new Corner(streetData.toStreet(), i.toStreet(), stop))
+                validCorners.push(new Corner(streetData, i, stop))
             })
         })
     })
