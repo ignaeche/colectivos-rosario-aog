@@ -1,3 +1,10 @@
+export interface Bus {
+    name: string,
+    id: number,
+    entity: number,
+    streets?: Street[]
+}
+
 export interface Street {
     id: number,
     desc: string,
