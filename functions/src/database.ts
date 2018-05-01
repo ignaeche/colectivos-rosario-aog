@@ -48,7 +48,7 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
         streetData.intersections.filter(i => streetDescPredicate(i, intersection))
         .forEach(i => {
             i.stops.forEach(stop => {
-                validCorners.push(new Corner(new Street(streetData.id, streetData.desc), new Street(i.id, i.desc), stop))
+                validCorners.push(new Corner(streetData.toStreet(), i.toStreet(), stop))
             })
         })
     })
