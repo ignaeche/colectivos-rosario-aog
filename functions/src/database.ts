@@ -13,11 +13,15 @@ export function getBusStopDocument(db: FirebaseFirestore.Firestore, bus: string,
     return db.collection('buses').doc(bus).collection('stops').doc(stop).get()
 }
 
-function streetDescPredicate(streetObject: Street, street: string) {
-    // replace whitespaces with wildcards on regexp
-    const desc: string = removeAccents.remove(streetObject.desc)
-    const regExp = RegExp(`(${street}|${removeAccents.remove(street)})`, 'i')
+function wildcardRegExp(string: string) {
+    // Replace whitespaces with wildcards on regexp
+    const test = string.replace(" ", ".*")
+    return RegExp(`(${test}|${removeAccents.remove(test)})`, 'i')
+}
+
+function streetDescPredicate(streetDoc: Street, regExp: RegExp) {
     // Return true if desc matches the given street name w/ and w/o accents
+    const desc: string = removeAccents.remove(streetDoc.desc)
     return regExp.test(desc)
 }
 
@@ -30,7 +34,8 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
 
     // Find matching streets and construct promise
     const promises = []
-    streets.filter(s => streetDescPredicate(s, street))
+    let regExp = wildcardRegExp(street)
+    streets.filter(s => streetDescPredicate(s, regExp))
     .forEach(s => { // forEach street s
         promises.push(getBusStreetDocRef(db, bus, s).get())
         // const ints: Array<StreetWithStops> = s.intersections
@@ -44,9 +49,10 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
 
     const streetDocs = await Promise.all(promises)
 
+    regExp = wildcardRegExp(intersection)
     streetDocs.forEach(snapshot => {
         const streetData: Street = snapshot.data()
-        streetData.intersections.filter(i => streetDescPredicate(i, intersection))
+        streetData.intersections.filter(i => streetDescPredicate(i, regExp))
         .forEach(i => {
             i.stops.forEach(stop => {
                 validCorners.push(new Corner(streetData, i, stop))
