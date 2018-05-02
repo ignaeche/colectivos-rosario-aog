@@ -1,0 +1,6 @@
+{
+    "noStopsFound": {
+        "speech": "No stops found in this corner",
+        "text": "No stops were found in the corner of {{street}} and {{intersection}} for the bus {{bus}}"
+    }
+}

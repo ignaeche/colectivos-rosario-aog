@@ -4,6 +4,7 @@ import { dialogflow, List } from 'actions-on-google';
 
 import * as database from './database';
 import { Corner } from './models';
+import * as responses from './responses';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
@@ -49,6 +50,10 @@ function logIntent(conv) {
     console.log(`${conv.intent} intent with params ${JSON.stringify(conv.parameters)}`)
 }
 
+app.middleware(conv => {
+    responses.i18next.changeLanguage(conv.user.locale)
+})
+
 app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
     logIntent(conv)
     const bus = params[Parameters.BUS_LINE_ARGUMENT] as string
@@ -60,7 +65,8 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
 
         const numberOfStops = validCorners.length
         if (numberOfStops === 0) {
-            conv.ask(`No se encontraron paradas en la esquina de ${street} y ${intersection} para la línea ${bus}`)
+            conv.ask(responses.prompts.noStopsFound(bus, street, intersection))
+            // conv.ask(`No se encontraron paradas en la esquina de ${street} y ${intersection} para la línea ${bus}`)
         } else if (numberOfStops === 1) {
             const corner = validCorners[0]
             // request here

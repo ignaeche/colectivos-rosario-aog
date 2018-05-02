@@ -1,0 +1,6 @@
+{
+    "noStopsFound": {
+        "speech": "No se encontraron paradas en esta esquina",
+        "text": "No se encontraron paradas en la esquina de {{street}} y {{intersection}} para la línea {{bus}}"
+    }
+}
