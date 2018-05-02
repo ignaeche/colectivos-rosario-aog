@@ -1,6 +1,18 @@
 {
+    "invalidStop": {
+        "speech": "La parada {{stop}} no es válida",
+        "text": "La parada {{stop}} no es válida para la línea {{bus}}"
+    },
     "noStopsFound": {
         "speech": "No se encontraron paradas en esta esquina",
         "text": "No se encontraron paradas en la esquina de {{street}} y {{intersection}} para la línea {{bus}}"
-    }
+    },
+    "corner": "{{street}} y {{intersection}}",
+    "stopNumber": "Parada {{stop}}",
+    "pickStop": "Escoja una parada",
+    "stops": "Paradas",
+
+    "invalidOption": "Seleccionaste una opción no válida",
+    "noOption": "No seleccionaste ninguna opción",
+    "errorOccurred": "Lo siento. Ocurrió un error."
 }

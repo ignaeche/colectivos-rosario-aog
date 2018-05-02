@@ -12,6 +12,15 @@ function createSimpleResponse(key: string, data) {
 
 export const prompts = {
     'noStopsFound': (bus, street, intersection) => {
-        return createSimpleResponse('noStopsFound', { bus: bus, street: street, intersection: intersection })
+        return createSimpleResponse('noStopsFound', { bus, street, intersection })
+    },
+    'invalidStop': (bus, stop) => {
+        return createSimpleResponse('invalidStop', { bus, stop })
+    },
+    'stopListItem': (stop, street, intersection) => {
+        return {
+            title: i18next.t('stopNumber', { stop }),
+            description: i18next.t('corner', { street, intersection })
+        }
     }
 }

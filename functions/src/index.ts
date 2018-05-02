@@ -66,7 +66,6 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
         const numberOfStops = validCorners.length
         if (numberOfStops === 0) {
             conv.ask(responses.prompts.noStopsFound(bus, street, intersection))
-            // conv.ask(`No se encontraron paradas en la esquina de ${street} y ${intersection} para la línea ${bus}`)
         } else if (numberOfStops === 1) {
             const corner = validCorners[0]
             // request here
@@ -75,24 +74,18 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
         } else {
             const items = {}
             validCorners.forEach(corner => {
-                const cornerStreet = corner.street.desc
-                const cornerIntersection = corner.intersection.desc
-                const stop = corner.stop
-                items['STOP_' + stop] = {
-                    title: `Parada ${stop}`,
-                    description: `${cornerStreet} y ${cornerIntersection}`
-                }
+                items[`STOP_${stop}`] = responses.prompts.stopListItem(corner.stop, corner.street.desc, corner.intersection.desc)
             });
             conv.contexts.set(Contexts.STOP_LIST_CONTEXT, 1, { [Parameters.BUS_LINE_ARGUMENT]: bus })
-            conv.ask('Escoja una parada')
+            conv.ask(responses.i18next.t('pickStop'))
             conv.ask(new List({
-                title: 'Paradas',
-                items: items
+                title: responses.i18next.t('stops'),
+                items
             }));
         }
     } catch (error) {
         console.error(error)
-        conv.ask(`No se pudo consultar el horario`)
+        conv.ask(responses.i18next.t('errorOccurred'))
     }
 })
 
@@ -103,20 +96,23 @@ app.intent(Intents.CORNER_OTHER_BUS_INTENT, Intents.CUANDO_LLEGA_CORNER_INTENT)
 app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     logIntent(conv)
     if (!option) {
-        conv.ask('No seleccionaste ninguna opción')
+        conv.ask(responses.i18next.t('noOption'))
         return
     }
     const stop = option.toString().split('_')
     switch (stop[0]) {
         case "STOP":
             // do conv.followup with event
-            const followupParams = conv.contexts.get(Contexts.STOP_LIST_CONTEXT).parameters
-            followupParams[Parameters.STOP_NUMBER_ARGUMENT] = stop[1]
-            conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
-            // conv.ask('Seleccionaste la parada ' + stop[1] + ' para el ' + context.parameters[Args.BUS_LINE_ARGUMENT])
+            if (conv.contexts.get(Contexts.STOP_LIST_CONTEXT) !== undefined) {
+                const followupParams = conv.contexts.get(Contexts.STOP_LIST_CONTEXT).parameters
+                followupParams[Parameters.STOP_NUMBER_ARGUMENT] = stop[1]
+                conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
+            } else {
+                conv.ask(responses.i18next.t('errorOccurred'))
+            }
             break;
         default:
-            conv.ask('Seleccionaste una opción no válida')
+            conv.ask(responses.i18next.t('invalidOption'))
             break;
     }
 })
@@ -136,11 +132,11 @@ app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async (conv, params) => {
             // request
             conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos`)
         } else {
-            conv.ask(`La parada ${stop} no es válida para la línea ${bus}`)
+            conv.ask(responses.prompts.invalidStop(bus, stop))
         }
     } catch (error) {
         console.error(error)
-        conv.ask(`No se pudo consultar el horario`)
+        conv.ask(responses.i18next.t('errorOccurred'))
     }
 })
 

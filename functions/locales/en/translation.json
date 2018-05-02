@@ -1,6 +1,18 @@
 {
+    "invalidStop": {
+        "speech": "Stop {{stop}} is not a valid stop",
+        "text": "Stop {{stop}} is not a valid stop for the bus {{bus}}"
+    },
     "noStopsFound": {
         "speech": "No stops found in this corner",
         "text": "No stops were found in the corner of {{street}} and {{intersection}} for the bus {{bus}}"
-    }
+    },
+    "corner": "{{street}} and {{intersection}}",
+    "stopNumber": "Stop {{stop}}",
+    "pickStop": "Pick a stop",
+    "stops": "Stops",
+
+    "invalidOption": "An invalid option was selected",
+    "noOption": "No option was selected",
+    "errorOccurred": "I'm sorry. An error occurred."
 }
