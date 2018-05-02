@@ -12,10 +12,16 @@ export interface Street {
     stops?: string[]
 }
 
-export interface ArrivalTime {
+export interface BusArrival {
     flag: string,
-    time: string,
+    time: ArrivalTime,
     interno: string
+}
+
+export interface ArrivalTime {
+    arriving: boolean,
+    minutes?: string,
+    scheduled?: boolean
 }
 
 export class Corner {

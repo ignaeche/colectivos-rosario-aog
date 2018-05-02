@@ -1,7 +1,7 @@
 import * as request from 'request-promise-native';
 import { Response } from 'request';
 import { JSDOM } from 'jsdom';
-import { Bus, ArrivalTime } from './models';
+import { Bus, BusArrival, ArrivalTime } from './models';
 
 function requestArrivalTime(bus: Bus, stop: string) {
     const formData = {
@@ -22,10 +22,24 @@ function requestArrivalTime(bus: Bus, stop: string) {
     return request(options)
 }
 
+function parseArrivalTime(arrival: string): ArrivalTime {
+    const regexp = /(llegando)|(\d+)\s*min\s*(\(Hora Programada\))?/i;
+    const match = arrival.match(regexp)
+    if (match[1] !== undefined) {
+        return { arriving: true }
+    } else {
+        return {
+            arriving: false,
+            minutes: match[2],
+            scheduled: match[3] !== undefined
+        }
+    }
+}
+
 function processArrivalTimes(html: string) {
     const frag = JSDOM.fragment(html)
     const rows = Array.from(frag.querySelectorAll('.tablaArribos tbody tr'))
-    const times = new Map<string, ArrivalTime[]>()
+    const times = new Map<string, BusArrival[]>()
     rows.forEach(row => {
         const cells = row.children
         
@@ -35,7 +49,7 @@ function processArrivalTimes(html: string) {
         times[flag] = times[flag] || []
         times[flag].push({
             flag: flag,
-            time: extract(1),
+            time: parseArrivalTime(extract(1)),
             interno: extract(2)
         })
     })
