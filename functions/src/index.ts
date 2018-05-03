@@ -58,6 +58,10 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
     const street = params[Parameters.STREET_ARGUMENT] as string
     const intersection = params[Parameters.INTERSECTION_ARGUMENT] as string
 
+    // If this intent is invoked then a corner-followup context is outputted
+    // Remove stop-number-followup context in order for dialogflow to match followups to 'corner' intents
+    conv.contexts.delete(Contexts.STOP_FOLLOWUP_CONTEXT)
+
     try {
         const validCorners : Array<Corner> = await database.findValidCorners(db, bus, street, intersection)
 
@@ -122,6 +126,10 @@ app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async (conv, params) => {
     // console.log(JSON.stringify(conv.contexts))
     const bus = params[Parameters.BUS_LINE_ARGUMENT] as string
     const stop = params[Parameters.STOP_NUMBER_ARGUMENT] as string
+    
+    // If this intent is invoked then a stop-number-followup context is outputted
+    // Remove corner-followup context in order for dialogflow to match followups to 'stop' intents
+    conv.contexts.delete(Contexts.CORNER_FOLLOWUP_CONTEXT)
     
     // const busDoc = await database.getBusDocument(db, bus)
     // const data = busDoc.data()
