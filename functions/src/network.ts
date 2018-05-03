@@ -36,6 +36,10 @@ function parseArrivalTime(arrival: string): ArrivalTime {
     }
 }
 
+function parseFlag(flag: string) {
+    return flag.replace(/\s\(Adaptado\)/i, "").trim()
+}
+
 function processArrivalTimes(html: string) {
     const frag = JSDOM.fragment(html)
     const rows = Array.from(frag.querySelectorAll('.tablaArribos tbody tr'))
@@ -45,7 +49,7 @@ function processArrivalTimes(html: string) {
         
         const extract = n => cells.item(n).textContent.trim()
 
-        const flag = extract(0)
+        const flag = parseFlag(extract(0))
         times[flag] = times[flag] || []
         times[flag].push({
             flag: flag,
@@ -54,7 +58,7 @@ function processArrivalTimes(html: string) {
         })
     })
     // Only return times if not empty
-    if (times.size > 0) {
+    if (Object.keys(times).length > 0) {
         return times
     } else {
         return undefined
