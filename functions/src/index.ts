@@ -32,9 +32,7 @@ const Events = {
 const Contexts = {
     BUS_FOLLOWUP_CONTEXT: 'bus-followup',
     STOP_FOLLOWUP_CONTEXT: 'stop-number-followup',
-    CORNER_FOLLOWUP_CONTEXT: 'corner-followup',
-    // webhook-only context
-    STOP_LIST_CONTEXT: 'stop-list-followup'
+    CORNER_FOLLOWUP_CONTEXT: 'corner-followup'
 }
 
 const Parameters = {
@@ -76,7 +74,6 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
             validCorners.forEach(corner => {
                 items[`STOP_${corner.stop}`] = responses.prompts.stopListItem(corner.stop, corner.street.desc, corner.intersection.desc)
             });
-            conv.contexts.set(Contexts.STOP_LIST_CONTEXT, 1, { [Parameters.BUS_LINE_ARGUMENT]: bus })
             conv.ask(responses.i18next.t('pickStop'))
             conv.ask(new List({
                 title: responses.i18next.t('stops'),
@@ -103,9 +100,12 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     switch (stop[0]) {
         case "STOP":
             // do conv.followup with event
-            if (conv.contexts.get(Contexts.STOP_LIST_CONTEXT) !== undefined) {
-                const followupParams = conv.contexts.get(Contexts.STOP_LIST_CONTEXT).parameters
-                followupParams[Parameters.STOP_NUMBER_ARGUMENT] = stop[1]
+            const context = conv.contexts.get(Contexts.BUS_FOLLOWUP_CONTEXT)
+            if (context !== undefined) {
+                const followupParams = {
+                    [Parameters.BUS_LINE_ARGUMENT]: context.parameters[Parameters.BUS_LINE_ARGUMENT],
+                    [Parameters.STOP_NUMBER_ARGUMENT]: stop[1]
+                }
                 conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
             } else {
                 conv.ask(responses.i18next.t('errorOccurred'))
