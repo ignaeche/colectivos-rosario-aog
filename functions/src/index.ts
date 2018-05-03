@@ -74,7 +74,7 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
         } else {
             const items = {}
             validCorners.forEach(corner => {
-                items[`STOP_${stop}`] = responses.prompts.stopListItem(corner.stop, corner.street.desc, corner.intersection.desc)
+                items[`STOP_${corner.stop}`] = responses.prompts.stopListItem(corner.stop, corner.street.desc, corner.intersection.desc)
             });
             conv.contexts.set(Contexts.STOP_LIST_CONTEXT, 1, { [Parameters.BUS_LINE_ARGUMENT]: bus })
             conv.ask(responses.i18next.t('pickStop'))
