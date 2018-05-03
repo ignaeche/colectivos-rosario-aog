@@ -12,6 +12,26 @@
     "pickStop": "Pick a stop",
     "stops": "Stops",
 
+    "arrival": {
+        "speech": "Bus line {{bus}} {{arrivesIn}} to stop {{stop}}.",
+        "text": "Bus line {{bus}} {{arrivesIn}} to stop {{stop}} ({{street}} and {{intersection}})."
+    },
+    "nextBus": {
+        "speech": "<s>The next bus {{arrivesIn}}.</s>",
+        "text": "The next bus {{arrivesIn}}."
+    },
+
+    "minutes": "{{count}} minute",
+    "minutes_plural": "{{count}} minutes",
+
+    "arrivalIsArriving": "is arriving",
+    "arrivalInMinutesScheduled": "is scheduled to arrive in $t(minutes, {'count': {{minutes}} })",
+    "arrivalInMinutes": "arrives in $t(minutes, {'count': {{minutes}} })",
+
+    "arrivalNextIsArriving": "is arriving",
+    "arrivalNextScheduled": "is scheduled to arrive in $t(minutes, {'count': {{minutes}} })",
+    "arrivalNext": "arrives in $t(minutes, {'count': {{minutes}} })",
+
     "invalidOption": "An invalid option was selected",
     "noOption": "No option was selected",
     "errorOccurred": "I'm sorry. An error occurred."

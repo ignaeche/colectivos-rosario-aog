@@ -11,6 +11,7 @@ i18next
         fallbackLng: 'es',
         preload: ['es', 'en'],
         ns: 'translation',
+        returnObjects: true,
         backend: {
             loadPath: path.join(__dirname, '../locales/{{lng}}/{{ns}}.json')
         }

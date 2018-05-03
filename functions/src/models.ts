@@ -24,6 +24,14 @@ export interface ArrivalTime {
     scheduled?: boolean
 }
 
+export interface ArrivalTranslation {
+    bus: string,
+    arrivesIn: string,
+    stop: string,
+    street: string,
+    intersection: string,
+}
+
 export class Corner {
     constructor(public street: Street, public intersection: Street, public stop: string) { }
 }
