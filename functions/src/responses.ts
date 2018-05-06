@@ -1,6 +1,7 @@
 import i18next from './i18next';
-import { SimpleResponse } from 'actions-on-google';
+import { SimpleResponse, Suggestions } from 'actions-on-google';
 import { BusArrival, ArrivalTranslation, Corner, ArrivalTime } from './models';
+import { randomPop, takeRandom } from './util';
 
 export { default as i18next } from './i18next';
 
@@ -64,6 +65,12 @@ export const prompts = {
             speech: addSSMLTag(response.map(l => l.map(o => o.speech).join("")).join("<break time=\"400ms\"/>"), 'speak'),
             text: response.map(l => l.map(o => o.text).join(" ")).join(" ")
         })
+    }
+}
+export const suggestions = {
+    'buses': (buses: Array<string>, howMany: number) => {
+        const list = takeRandom(buses, howMany)
+        return new Suggestions(list.sort().map(bus => i18next.t('otherBusSuggestion', { bus })))
     }
 }
 

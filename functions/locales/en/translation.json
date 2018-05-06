@@ -32,6 +32,8 @@
     "arrivalNextScheduled": "is scheduled to arrive in $t(minutes, {'count': {{minutes}} })",
     "arrivalNext": "arrives in $t(minutes, {'count': {{minutes}} })",
 
+    "otherBusSuggestion": "Bus {{bus}}?",
+
     "invalidOption": "An invalid option was selected",
     "noOption": "No option was selected",
     "errorOccurred": "I'm sorry. An error occurred."
