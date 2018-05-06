@@ -12,9 +12,9 @@
     "pickStop": "Escoja una parada",
     "stops": "Paradas",
 
-    "searchingArrivalTime": {
-        "speech": "Buscando horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
-        "text": "Buscando horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}"
+    "foundArrivalTime": {
+        "speech": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
+        "text": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}"
     },
     "arrival": {
         "speech": "<s>La línea {{flag}} {{arrivesIn}}.</s>",

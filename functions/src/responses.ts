@@ -36,8 +36,8 @@ export const prompts = {
             description: i18next.t('corner', { street, intersection })
         }
     },
-    'searchingArrivalTimes': (bus: Bus, corner: Corner) => {
-        return new SimpleResponse(i18next.t('searchingArrivalTime', {
+    'foundArrivalTimes': (bus: Bus, corner: Corner) => {
+        return new SimpleResponse(i18next.t('foundArrivalTime', {
             bus: bus.name,
             street: corner.street.desc,
             intersection: corner.intersection.desc,
