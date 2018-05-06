@@ -1,6 +1,6 @@
 import i18next from './i18next';
 import { SimpleResponse, Suggestions } from 'actions-on-google';
-import { BusArrival, ArrivalTranslation, Corner, ArrivalTime } from './models';
+import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus } from './models';
 import { randomPop, takeRandom } from './util';
 
 export { default as i18next } from './i18next';
@@ -36,17 +36,22 @@ export const prompts = {
             description: i18next.t('corner', { street, intersection })
         }
     },
-    'arrivalTimes': (corner: Corner, arrivalTimes: Map<string, BusArrival[]>) => {
+    'searchingArrivalTimes': (bus: Bus, corner: Corner) => {
+        return new SimpleResponse(i18next.t('searchingArrivalTime', {
+            bus: bus.name,
+            street: corner.street.desc,
+            intersection: corner.intersection.desc,
+            stop: corner.stop
+        }))
+    },
+    'arrivalTimes': (arrivalTimes: Map<string, BusArrival[]>) => {
         const response = []
         Object.keys(arrivalTimes).forEach(flag => { 
         // arrivalTimes.forEach((arrivals: BusArrival[], flag: string) => {
             const arrivals = arrivalTimes[flag]
             const responseLine = []
             const data: ArrivalTranslation = {} as ArrivalTranslation
-            data.bus = flag
-            data.street = corner.street.desc
-            data.intersection = corner.intersection.desc
-            data.stop = corner.stop
+            data.flag = flag
             // Get first arrival
             const arrival = arrivals.shift()
             // Get arrival string

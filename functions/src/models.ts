@@ -25,11 +25,8 @@ export interface ArrivalTime {
 }
 
 export interface ArrivalTranslation {
-    bus: string,
+    flag: string,
     arrivesIn: string,
-    stop: string,
-    street: string,
-    intersection: string,
 }
 
 export class Corner {
