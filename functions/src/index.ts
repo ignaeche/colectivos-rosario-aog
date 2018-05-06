@@ -5,42 +5,10 @@ import { dialogflow, List } from 'actions-on-google';
 import * as database from './database';
 import { Corner } from './models';
 import * as responses from './responses';
+import { Intents, IntentsRedirect, Contexts, Parameters, Events } from './dialogflow-constants';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
-
-const Intents = {
-    CUANDO_LLEGA_CORNER_INTENT: 'cuando_llega_corner_intent',
-    CUANDO_LLEGA_STOP_INTENT: 'cuando_llega_stop_intent',
-    // with bus-followup context
-    BUS_CORNER_INTENT: 'bus_corner_intent',
-    BUS_STOP_INTENT: 'bus_stop_intent',
-    // with corner-followup context
-    CORNER_OTHER_BUS_INTENT: 'corner_other_bus_intent',
-    // with stop-number-followup context
-    STOP_OTHER_BUS_INTENT: 'stop_other_bus_intent',
-    // triggered by event stop_search_event
-    STOP_SEARCH_INTENT: 'stop_search_intent',
-    // triggered by event actions_intent_OPTION
-    STOP_LIST_SELECTION_INTENT: 'stop_list_selection_intent'
-};
-
-const Events = {
-    STOP_SEARCH_EVENT: 'stop_search_event'
-}
-
-const Contexts = {
-    BUS_FOLLOWUP_CONTEXT: 'bus-followup',
-    STOP_FOLLOWUP_CONTEXT: 'stop-number-followup',
-    CORNER_FOLLOWUP_CONTEXT: 'corner-followup'
-}
-
-const Parameters = {
-    BUS_LINE_ARGUMENT: 'bus-line',
-    STREET_ARGUMENT: 'street',
-    INTERSECTION_ARGUMENT: 'intersection',
-    STOP_NUMBER_ARGUMENT: 'stop-number'
-}
 
 const app = dialogflow()
 
@@ -89,10 +57,6 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
         conv.ask(responses.i18next.t('errorOccurred'))
     }
 })
-
-// Handler redirect
-app.intent(Intents.BUS_CORNER_INTENT, Intents.CUANDO_LLEGA_CORNER_INTENT)
-app.intent(Intents.CORNER_OTHER_BUS_INTENT, Intents.CUANDO_LLEGA_CORNER_INTENT)
 
 app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     logIntent(conv)
@@ -149,8 +113,9 @@ app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async (conv, params) => {
 })
 
 // Handler redirect
-app.intent(Intents.BUS_STOP_INTENT, Intents.CUANDO_LLEGA_STOP_INTENT)
-app.intent(Intents.STOP_OTHER_BUS_INTENT, Intents.CUANDO_LLEGA_STOP_INTENT)
-app.intent(Intents.STOP_SEARCH_INTENT, Intents.CUANDO_LLEGA_STOP_INTENT)
+Object.keys(IntentsRedirect).forEach(key => {
+    const intents = IntentsRedirect[key]
+    intents.forEach(i => app.intent(i, key))
+})
 
 export const cuandoLlegaFulfillment = functions.https.onRequest(app)
