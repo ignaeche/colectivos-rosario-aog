@@ -8,10 +8,11 @@ export const randomPop = (array: Array<any>) => {
 }
 
 export const takeRandom = (array: Array<any>, n: number): Array<any> => {
+    const arr = array.slice()
     const result = []
     const range = [...Array(n).keys()]
     range.forEach(_ => {
-        const element = randomPop(array)
+        const element = randomPop(arr)
         if (element !== null) result.push(element)
     })
     return result
