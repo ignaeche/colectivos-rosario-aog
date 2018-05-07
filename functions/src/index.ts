@@ -5,7 +5,7 @@ import { dialogflow, List } from 'actions-on-google';
 import * as database from './database';
 import { Corner } from './models';
 import * as responses from './responses';
-import { Intents, IntentsRedirect, Contexts, Parameters, Events } from './dialogflow-constants';
+import { Intents, IntentsRedirect, AppContexts, Parameters, Events } from './dialogflow-constants';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
@@ -28,7 +28,7 @@ app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
 
     // If this intent is invoked then a corner-followup context is outputted
     // Remove stop-number-followup context in order for dialogflow to match followups to 'corner' intents
-    conv.contexts.delete(Contexts.STOP_FOLLOWUP_CONTEXT)
+    conv.contexts.delete(AppContexts.STOP_FOLLOWUP_CONTEXT)
 
     try {
         const validCorners : Array<Corner> = await database.findValidCorners(db, bus, street, intersection)
@@ -68,7 +68,7 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     switch (stop[0]) {
         case "STOP":
             // do conv.followup with event
-            const context = conv.contexts.get(Contexts.BUS_FOLLOWUP_CONTEXT)
+            const context = conv.contexts.get(AppContexts.BUS_FOLLOWUP_CONTEXT)
             if (context !== undefined) {
                 const followupParams = {
                     [Parameters.BUS_LINE_ARGUMENT]: context.parameters[Parameters.BUS_LINE_ARGUMENT],
@@ -93,7 +93,7 @@ app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async (conv, params) => {
     
     // If this intent is invoked then a stop-number-followup context is outputted
     // Remove corner-followup context in order for dialogflow to match followups to 'stop' intents
-    conv.contexts.delete(Contexts.CORNER_FOLLOWUP_CONTEXT)
+    conv.contexts.delete(AppContexts.CORNER_FOLLOWUP_CONTEXT)
     
     // const busDoc = await database.getBusDocument(db, bus)
     // const data = busDoc.data()

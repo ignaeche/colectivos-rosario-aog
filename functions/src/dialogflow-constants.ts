@@ -30,7 +30,7 @@ export const Events = {
     STOP_SEARCH_EVENT: 'stop_search_event'
 }
 
-export const Contexts = {
+export const AppContexts = {
     BUS_FOLLOWUP_CONTEXT: 'bus-followup',
     STOP_FOLLOWUP_CONTEXT: 'stop-number-followup',
     CORNER_FOLLOWUP_CONTEXT: 'corner-followup'
