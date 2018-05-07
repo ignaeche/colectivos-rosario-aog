@@ -8,9 +8,13 @@
         "text": "No se encontraron paradas en la esquina de {{street}} y {{intersection}} para la línea {{bus}}"
     },
     "corner": "{{street}} y {{intersection}}",
+    "distanceAndCorner": "A $t(distanceMeters, {'count': {{distance}} }) en la esquina de {{street}} y {{intersection}}",
+    "distanceMeters": "{{count}} metro",
+    "distanceMeters_plural": "{{count}} metros",
     "stopNumber": "Parada {{stop}}",
     "pickStop": "Escoja una parada",
     "stops": "Paradas",
+    "foundTheseStops": "Encontré estas paradas",
 
     "foundArrivalTime": {
         "speech": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
@@ -40,5 +44,8 @@
 
     "invalidOption": "Seleccionaste una opción no válida",
     "noOption": "No seleccionaste ninguna opción",
-    "errorOccurred": "Lo siento. Ocurrió un error."
+    "errorOccurred": "Lo siento. Ocurrió un error.",
+
+    "locationPermissionReason": "Para mostrar las paradas más cercanas",
+    "couldntAccessLocation": "No pude acceder a tu ubicación."
 }

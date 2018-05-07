@@ -1,6 +1,8 @@
 export const Intents = {
     CUANDO_LLEGA_CORNER_INTENT: 'cuando_llega_corner_intent',
     CUANDO_LLEGA_STOP_INTENT: 'cuando_llega_stop_intent',
+    CLOSEST_STOPS_INTENT: 'closest_stops_intent',
+    HANDLE_PERMISSION_INTENT: 'handle_permission_intent',
     // with bus-followup context
     BUS_CORNER_INTENT: 'bus_corner_intent',
     BUS_STOP_INTENT: 'bus_stop_intent',

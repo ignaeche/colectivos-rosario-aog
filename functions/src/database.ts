@@ -13,6 +13,22 @@ export function getBusStopDocument(db: FirebaseFirestore.Firestore, bus: string,
     return db.collection('buses').doc(bus).collection('stops').doc(stop).get()
 }
 
+export async function getStopDocuments(db: FirebaseFirestore.Firestore, stops: Array<string>) {
+    const promises = []
+    const promise = stop => db.collection('stops').doc(stop).get()
+    stops.forEach(stop => promises.push(promise(stop)))
+
+    const docs = await Promise.all(promises)
+
+    const results = []
+    docs.forEach(snapshot => {
+        const doc = snapshot.data()
+        results.push(doc)
+    })
+
+    return results
+}
+
 function wildcardRegExp(string: string) {
     // Replace whitespaces with wildcards on regexp
     const test = string.replace(" ", ".*")

@@ -36,6 +36,12 @@ export const prompts = {
             description: i18next.t('corner', { street, intersection })
         }
     },
+    'stopLocationListItem': (stop, distance, street, intersection) => {
+        return {
+            title: i18next.t('stopNumber', { stop }),
+            description: i18next.t('distanceAndCorner', { distance, street, intersection })
+        }
+    },
     'foundArrivalTimes': (bus: Bus, corner: Corner) => {
         return new SimpleResponse(i18next.t('foundArrivalTime', {
             bus: bus.name,

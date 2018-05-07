@@ -8,13 +8,17 @@
         "text": "No stops were found in the corner of {{street}} and {{intersection}} for the bus {{bus}}"
     },
     "corner": "{{street}} and {{intersection}}",
+    "distanceAndCorner": "$t(distanceMeters, {'count': {{distance}} }) away on the corner of {{street}} and {{intersection}}",
+    "distanceMeters": "{{count}} meters",
+    "distanceMeters_plural": "{{count}} meters",
     "stopNumber": "Stop {{stop}}",
     "pickStop": "Pick a stop",
     "stops": "Stops",
+    "foundTheseStops": "I found these stops",
 
     "foundArrivalTime": {
-        "speech": "I found the arrival times for bus {{bus}} and stop {{stop}} in the corner of {{street}} and {{intersection}}",
-        "text": "I found the arrival times for bus {{bus}} and stop {{stop}}, in the corner of {{street}} and {{intersection}}"
+        "speech": "I found the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}",
+        "text": "I found the arrival times for bus {{bus}} and stop {{stop}}, on the corner of {{street}} and {{intersection}}"
     },
     "arrival": {
         "speech": "Bus line {{flag}} {{arrivesIn}}.",
@@ -40,5 +44,8 @@
 
     "invalidOption": "An invalid option was selected",
     "noOption": "No option was selected",
-    "errorOccurred": "I'm sorry. An error occurred."
+    "errorOccurred": "I'm sorry. An error occurred.",
+
+    "locationPermissionReason": "To show the closest stops",
+    "couldntAccessLocation": "I couldn't access your location"
 }

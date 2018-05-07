@@ -1,14 +1,16 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { dialogflow, List } from 'actions-on-google';
+import { dialogflow, List, Permission, DialogflowConversation, Contexts } from 'actions-on-google';
 
 import * as database from './database';
-import { Corner } from './models';
+import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
 import { Intents, IntentsRedirect, AppContexts, Parameters, Events } from './dialogflow-constants';
+import { getClosestStops } from './location';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
+const rtdb = admin.database()
 
 const app = dialogflow()
 
@@ -109,6 +111,53 @@ app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async (conv, params) => {
     } catch (error) {
         console.error(error)
         conv.ask(responses.i18next.t('errorOccurred'))
+    }
+})
+
+const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Contexts>) => {
+    try {
+        // @ts-ignore: Property does not exist
+        const { coordinates } = conv.data
+        const locations: Array<StopLocation> = await getClosestStops(rtdb, coordinates)
+        const stopDocs: Array<Stop> = await database.getStopDocuments(db, locations.map(o => o.stop))
+
+        const items = {}
+        stopDocs.forEach(stop => {
+            const distance = locations.find(o => o.stop === stop.number).distanceInMeters
+            items[`STOP_${stop.number}`] = responses.prompts.stopLocationListItem(stop.number, distance, stop.street.desc, stop.intersection.desc)
+        })
+        conv.ask(responses.i18next.t('foundTheseStops'))
+        conv.ask(new List({
+            title: responses.i18next.t('stops'),
+            items
+        }))
+    } catch (error) {
+        conv.ask(responses.i18next.t('errorOccurred'))
+    }
+}
+
+app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
+    logIntent(conv)
+    // @ts-ignore: Property does not exist
+    if (!conv.data.coordinates) {
+        conv.ask(new Permission({
+            context: responses.i18next.t('locationPermissionReason'),
+            permissions: 'DEVICE_PRECISE_LOCATION'
+        }))
+    } else {
+        await showStopLocationList(conv)
+    }
+})
+
+app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
+    logIntent(conv)
+    if (granted) {
+        const { coordinates } = conv.device.location
+        // @ts-ignore: Property does not exit
+        conv.data.coordinates = coordinates
+        await showStopLocationList(conv)
+    } else {
+        conv.ask(responses.i18next.t('couldntAccessLocation'))
     }
 })
 
