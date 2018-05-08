@@ -11,6 +11,7 @@ export const Intents = {
     CORNER_OTHER_BUS_INTENT: 'corner_other_bus_intent',
     // with stop-number-followup context
     STOP_OTHER_BUS_INTENT: 'stop_other_bus_intent',
+    STOP_INFORMATION_FOLLOWUP_INTENT: 'stop_information_followup_intent',
     // triggered by event stop_search_event
     STOP_SEARCH_INTENT: 'stop_search_intent',
     // triggered by event actions_intent_OPTION
@@ -30,7 +31,8 @@ export const IntentsRedirect = {
         Intents.CORNER_OTHER_BUS_INTENT
     ],
     [Intents.STOP_INFORMATION_INTENT]: [
-        Intents.STOP_INFORMATION_TRIGGER_INTENT
+        Intents.STOP_INFORMATION_TRIGGER_INTENT,
+        Intents.STOP_INFORMATION_FOLLOWUP_INTENT
     ]
 }
 
