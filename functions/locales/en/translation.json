@@ -4,8 +4,8 @@
         "text": "Stop {{stop}} is not a valid stop for the bus {{bus}}"
     },
     "noStopsFound": {
-        "speech": "No stops found in this corner",
-        "text": "No stops were found in the corner of {{street}} and {{intersection}} for the bus {{bus}}"
+        "speech": "No stops found on this corner",
+        "text": "No stops were found on the corner of {{street}} and {{intersection}} for the bus {{bus}}"
     },
     "corner": "{{street}} and {{intersection}}",
     "distanceAndCorner": "$t(distanceMeters, {'count': {{distance}} }) away on the corner of {{street}} and {{intersection}}",
@@ -50,10 +50,10 @@
     "couldntAccessLocation": "I couldn't access your location",
     "stopDoesNotExist": "I'm afraid stop {{stop}} does not exist.",
     "stopCardSimple": {
-        "speech": "<speak><s>Stop {{stop.number}} is located in the corner of {{stop.street.desc}} and {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
+        "speech": "<speak><s>Stop {{stop.number}} is located on the corner of {{stop.street.desc}} and {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
         "text": "Here you go"
     },
-    "stopCard": "Stop __{{stop.number}}__ is located in the corner of _{{stop.street.desc}}_ and _{{stop.intersection.desc}}_. $t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.",
+    "stopCard": "Stop __{{stop.number}}__ is located on the corner of _{{stop.street.desc}}_ and _{{stop.intersection.desc}}_. $t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.",
     "busLineService": "The bus line that services this stop is",
     "busLineService_plural": "The bus lines that service this stop are",
     "andSeparator": " and ",
