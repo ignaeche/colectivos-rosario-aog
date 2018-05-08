@@ -6,9 +6,9 @@ const STATIC_MAPS_URL = 'https://maps.googleapis.com/maps/api/staticmap'
 const STATIC_MAPS_SIZE = '544x272'
 
 export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, language: string) {
-    const imageUrl = url.parse(STATIC_MAPS_URL, true)
+    const uri = url.parse(STATIC_MAPS_URL, true)
     const coords = [coordinates.latitude, coordinates.longitude].join(',')
-    imageUrl.query = {
+    uri.query = {
         key: functions.config().maps.key,
         center: coords,
         size: STATIC_MAPS_SIZE,
@@ -18,7 +18,19 @@ export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, la
         language: language,
         markers: coords
     }
-    return sign(url.format(imageUrl), functions.config().maps.secret)
+    return sign(url.format(uri), functions.config().maps.secret)
+}
+
+const MAPS_URL = 'https://www.google.com/maps/search/'
+
+export function getStopMapsLink(coordinates: FirebaseFirestore.GeoPoint) {
+    const uri = url.parse(MAPS_URL, true)
+    const coords = [coordinates.latitude, coordinates.longitude].join(',')
+    uri.query = {
+        api: '1',
+        query: coords
+    }
+    return url.format(uri)
 }
 
 /**

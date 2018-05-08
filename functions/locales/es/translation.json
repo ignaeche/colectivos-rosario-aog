@@ -57,5 +57,7 @@
     "busLineService": "La línea que presta servicio aquí es",
     "busLineService_plural": "Las líneas que prestan servicio aquí son",
     "andSeparator": " y ",
-    "joinArticle": "la {{value}}"
+    "joinArticle": "la {{value}}",
+
+    "viewOnGoogleMaps": "Ver en Google Maps"
 }

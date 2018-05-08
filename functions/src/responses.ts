@@ -1,8 +1,8 @@
 import i18next from './i18next';
-import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image } from 'actions-on-google';
+import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button } from 'actions-on-google';
 import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop } from './models';
 import { randomPop, takeRandom } from './util';
-import { getStopLocationImage } from './maps';
+import { getStopLocationImage, getStopMapsLink } from './maps';
 
 export { default as i18next } from './i18next';
 
@@ -93,6 +93,10 @@ export const prompts = {
                 alt: i18next.t('stopNumber', { stop: stop.number }),
             })
             options.display = 'CROPPED'
+            options.buttons = new Button({
+                title: i18next.t('viewOnGoogleMaps'),
+                url: getStopMapsLink(stop.location)
+            })
         }
         return [
             createSimpleResponse('stopCardSimple', { stop }),

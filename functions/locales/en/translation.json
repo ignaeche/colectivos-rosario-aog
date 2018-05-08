@@ -57,5 +57,7 @@
     "busLineService": "The bus line that services this stop is",
     "busLineService_plural": "The bus lines that service this stop are",
     "andSeparator": " and ",
-    "joinArticle": "the {{value}}"
+    "joinArticle": "the {{value}}",
+
+    "viewOnGoogleMaps": "View on Google Maps"
 }
