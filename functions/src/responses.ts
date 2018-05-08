@@ -1,6 +1,6 @@
 import i18next from './i18next';
-import { SimpleResponse, Suggestions } from 'actions-on-google';
-import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus } from './models';
+import { SimpleResponse, Suggestions, BasicCard } from 'actions-on-google';
+import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop } from './models';
 import { randomPop, takeRandom } from './util';
 
 export { default as i18next } from './i18next';
@@ -76,6 +76,19 @@ export const prompts = {
             speech: addSSMLTag(response.map(l => l.map(o => o.speech).join("")).join("<break time=\"400ms\"/>"), 'speak'),
             text: response.map(l => l.map(o => o.text).join(" ")).join(" ")
         })
+    },
+    'arrivalTimesComplete': (bus: Bus, corner: Corner, arrivalTimes: Map<string, BusArrival[]>) => {
+        return [prompts.foundArrivalTimes(bus, corner), prompts.arrivalTimes(arrivalTimes)]
+    },
+    'stopCard': (stop: Stop) => {
+        return [
+            createSimpleResponse('stopCardSimple', { stop }),
+            new BasicCard({
+                title: i18next.t('stopNumber', { stop: stop.number }),
+                subtitle: i18next.t('corner', { street: stop.street.desc, intersection: stop.intersection.desc }),
+                text: i18next.t('stopCard', { stop })
+            })
+        ]
     }
 }
 export const suggestions = {

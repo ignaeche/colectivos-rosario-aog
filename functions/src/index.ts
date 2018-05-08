@@ -78,8 +78,12 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
                 }
                 conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
             } else {
-                conv.ask(responses.i18next.t('errorOccurred'))
+                conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER_ARGUMENT]: stop[1] })
+                // conv.ask(responses.i18next.t('errorOccurred'))
             }
+            break;
+        case "STOPINFO":
+            conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER_ARGUMENT]: stop[1] })
             break;
         default:
             conv.ask(responses.i18next.t('invalidOption'))
@@ -124,7 +128,7 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
         const items = {}
         stopDocs.forEach(stop => {
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
-            items[`STOP_${stop.number}`] = responses.prompts.stopLocationListItem(stop.number, distance, stop.street.desc, stop.intersection.desc)
+            items[`STOPINFO_${stop.number}`] = responses.prompts.stopLocationListItem(stop.number, distance, stop.street.desc, stop.intersection.desc)
         })
         conv.ask(responses.i18next.t('foundTheseStops'))
         conv.ask(new List({
@@ -158,6 +162,26 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
         await showStopLocationList(conv)
     } else {
         conv.ask(responses.i18next.t('couldntAccessLocation'))
+    }
+})
+
+app.intent(Intents.STOP_INFORMATION_INTENT, async (conv, params) => {
+    logIntent(conv)
+    const stop = params[Parameters.STOP_NUMBER_ARGUMENT] as string
+
+    conv.contexts.delete(AppContexts.CORNER_FOLLOWUP_CONTEXT)
+
+    try {
+        const doc = await database.getStopDocument(db, stop)
+        if (doc.exists) {
+            const data = doc.data() as Stop
+            conv.ask(...responses.prompts.stopCard(data))
+            conv.ask(responses.suggestions.buses(data.buses, 3))
+        } else {
+            conv.ask(responses.i18next.t('stopDoesNotExist', { stop }))
+        }
+    } catch (error) {
+        conv.ask(responses.i18next.t('errorOccurred'))
     }
 })
 

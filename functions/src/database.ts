@@ -29,6 +29,10 @@ export async function getStopDocuments(db: FirebaseFirestore.Firestore, stops: A
     return results
 }
 
+export function getStopDocument(db: FirebaseFirestore.Firestore, stop: string) {
+    return db.collection('stops').doc(stop).get()
+}
+
 function wildcardRegExp(string: string) {
     // Replace whitespaces with wildcards on regexp
     const test = string.replace(" ", ".*")

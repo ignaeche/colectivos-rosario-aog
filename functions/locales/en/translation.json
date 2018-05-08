@@ -47,5 +47,15 @@
     "errorOccurred": "I'm sorry. An error occurred.",
 
     "locationPermissionReason": "To show the closest stops",
-    "couldntAccessLocation": "I couldn't access your location"
+    "couldntAccessLocation": "I couldn't access your location",
+    "stopDoesNotExist": "I'm afraid stop {{stop}} does not exist.",
+    "stopCardSimple": {
+        "speech": "<speak><s>Stop {{stop.number}} is located in the corner of {{stop.street.desc}} and {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
+        "text": "Here you go"
+    },
+    "stopCard": "Stop __{{stop.number}}__ is located in the corner of _{{stop.street.desc}}_ and _{{stop.intersection.desc}}_. $t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.",
+    "busLineService": "The bus line that services this stop is",
+    "busLineService_plural": "The bus lines that service this stop are",
+    "andSeparator": " and ",
+    "joinArticle": "the {{value}}"
 }

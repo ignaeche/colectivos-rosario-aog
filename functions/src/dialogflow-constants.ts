@@ -2,6 +2,7 @@ export const Intents = {
     CUANDO_LLEGA_CORNER_INTENT: 'cuando_llega_corner_intent',
     CUANDO_LLEGA_STOP_INTENT: 'cuando_llega_stop_intent',
     CLOSEST_STOPS_INTENT: 'closest_stops_intent',
+    STOP_INFORMATION_INTENT: 'stop_information_intent',
     HANDLE_PERMISSION_INTENT: 'handle_permission_intent',
     // with bus-followup context
     BUS_CORNER_INTENT: 'bus_corner_intent',
@@ -13,7 +14,9 @@ export const Intents = {
     // triggered by event stop_search_event
     STOP_SEARCH_INTENT: 'stop_search_intent',
     // triggered by event actions_intent_OPTION
-    STOP_LIST_SELECTION_INTENT: 'stop_list_selection_intent'
+    STOP_LIST_SELECTION_INTENT: 'stop_list_selection_intent',
+    // triggered by event stop_information_event
+    STOP_INFORMATION_TRIGGER_INTENT: 'stop_information_trigger_intent'
 }
 
 export const IntentsRedirect = {
@@ -25,11 +28,15 @@ export const IntentsRedirect = {
     [Intents.CUANDO_LLEGA_CORNER_INTENT]: [
         Intents.BUS_CORNER_INTENT,
         Intents.CORNER_OTHER_BUS_INTENT
+    ],
+    [Intents.STOP_INFORMATION_INTENT]: [
+        Intents.STOP_INFORMATION_TRIGGER_INTENT
     ]
 }
 
 export const Events = {
-    STOP_SEARCH_EVENT: 'stop_search_event'
+    STOP_SEARCH_EVENT: 'stop_search_event',
+    STOP_INFORMATION_EVENT: 'stop_information_event'
 }
 
 export const AppContexts = {
