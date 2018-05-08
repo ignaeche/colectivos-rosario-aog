@@ -74,3 +74,74 @@ export async function getArrivalTimes(bus: Bus, stop: string) {
         return undefined
     }
 }
+
+/**
+ * All buses stop request functions
+ */
+
+function requestAllBusesArrivalTime(stop: string) {
+    const formData = {
+        idParada: stop
+    }
+    const options = {
+        method: 'POST',
+        uri: 'http://www.etr.gov.ar/ajax/cuandollega/getProximosArribosParadaWeb.php',
+        form: formData,
+        resolveWithFullResponse: true,
+        time: true,
+        gzip: true
+    }
+    return request(options)
+}
+
+function parseAllBusesArrivalTime(arrival: string): BusArrival {
+    const regexp = /linea:\s(.*)\s(?:(llegando)|(\d+)\smin){1}/i;
+    const match = arrival.match(regexp)
+    // Group 1 is flag
+    const flag = match[1]
+
+    if (match[2] !== undefined) {
+        // llegando was matched
+        return { flag, time: { arriving: true } }
+    } else {
+        // N min was matched, N is in group 3
+        return {
+            flag,
+            time: {
+                arriving: false,
+                minutes: match[3],
+                scheduled: false
+            }
+        }
+    }
+}
+
+function processAllBusesArrivalTimes(html: string) {
+    const frag = JSDOM.fragment(html)
+    const rows = Array.from(frag.querySelectorAll('h3'))
+    const times = new Map<string, any[]>()
+
+    rows.forEach(row => {
+        const text = row.textContent.trim()
+        const arrival = parseAllBusesArrivalTime(text)
+
+        times[arrival.flag] = times[arrival.flag] || []
+        times[arrival.flag].push(arrival)
+    })
+    // Only return times if not empty
+    if (Object.keys(times).length > 0) {
+        return times
+    } else {
+        return undefined
+    }
+}
+
+async function getAllBusesArrivalTimes(stop: string) {
+    const response: Response = await requestAllBusesArrivalTime(stop)
+    console.log(`All buses arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
+    try {
+        return processAllBusesArrivalTimes(response.body)
+    } catch (error) {
+        return undefined
+    }
+}

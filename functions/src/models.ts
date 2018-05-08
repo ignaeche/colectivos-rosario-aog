@@ -15,7 +15,7 @@ export interface Street {
 export interface BusArrival {
     flag: string,
     time: ArrivalTime,
-    interno: string
+    interno?: string
 }
 
 export interface ArrivalTime {
