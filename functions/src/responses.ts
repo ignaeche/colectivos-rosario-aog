@@ -1,7 +1,8 @@
 import i18next from './i18next';
-import { SimpleResponse, Suggestions, BasicCard } from 'actions-on-google';
+import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image } from 'actions-on-google';
 import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop } from './models';
 import { randomPop, takeRandom } from './util';
+import { getStopLocationImage } from './maps';
 
 export { default as i18next } from './i18next';
 
@@ -81,13 +82,21 @@ export const prompts = {
         return [prompts.foundArrivalTimes(bus, corner), prompts.arrivalTimes(arrivalTimes)]
     },
     'stopCard': (stop: Stop) => {
+        const options: BasicCardOptions = {
+            title: i18next.t('stopNumber', { stop: stop.number }),
+            subtitle: i18next.t('corner', { street: stop.street.desc, intersection: stop.intersection.desc }),
+            text: i18next.t('stopCard', { stop })
+        }
+        if (stop.location) {
+            options.image = new Image({
+                url: getStopLocationImage(stop.location, i18next.language),
+                alt: i18next.t('stopNumber', { stop: stop.number }),
+            })
+            options.display = 'CROPPED'
+        }
         return [
             createSimpleResponse('stopCardSimple', { stop }),
-            new BasicCard({
-                title: i18next.t('stopNumber', { stop: stop.number }),
-                subtitle: i18next.t('corner', { street: stop.street.desc, intersection: stop.intersection.desc }),
-                text: i18next.t('stopCard', { stop })
-            })
+            new BasicCard(options)
         ]
     }
 }

@@ -34,7 +34,8 @@ export interface Stop {
     street: Street,
     intersection: Street,
     buses?: Array<string>,
-    otherBuses?: Array<string>
+    otherBuses?: Array<string>,
+    location?: FirebaseFirestore.GeoPoint
 }
 
 export interface StopLocation {
