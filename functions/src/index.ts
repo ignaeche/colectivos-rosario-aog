@@ -14,16 +14,12 @@ const rtdb = admin.database()
 
 const app = dialogflow()
 
-function logIntent(conv) {
-    console.log(`${conv.intent} intent with params ${JSON.stringify(conv.parameters)}`)
-}
-
 app.middleware(conv => {
     responses.i18next.changeLanguage(conv.user.locale)
+    console.log(`Intent ${conv.intent} matched with params ${JSON.stringify(conv.parameters)}`)
 })
 
 app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
-    logIntent(conv)
     const bus = params[Parameters.BUS_LINE] as string
     const street = params[Parameters.STREET] as string
     const intersection = params[Parameters.INTERSECTION] as string
@@ -61,7 +57,6 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
 })
 
 app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
-    logIntent(conv)
     if (!option) {
         conv.ask(responses.i18next.t('noOption'))
         return
@@ -92,8 +87,6 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
 })
 
 app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
-    logIntent(conv)
-    // console.log(JSON.stringify(conv.contexts))
     const bus = params[Parameters.BUS_LINE] as string
     const stop = params[Parameters.STOP_NUMBER] as string
 
@@ -141,7 +134,6 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
 }
 
 app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
-    logIntent(conv)
     // @ts-ignore: Property does not exist
     if (!conv.data.coordinates) {
         conv.ask(new Permission({
@@ -154,7 +146,6 @@ app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
 })
 
 app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
-    logIntent(conv)
     if (granted) {
         const { coordinates } = conv.device.location
         // @ts-ignore: Property does not exit
@@ -166,7 +157,6 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
 })
 
 app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
-    logIntent(conv)
     const stop = params[Parameters.STOP_NUMBER] as string
 
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
