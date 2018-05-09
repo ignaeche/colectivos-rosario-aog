@@ -5,7 +5,7 @@ import { dialogflow, List, Permission, DialogflowConversation, Contexts } from '
 import * as database from './database';
 import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
-import { Intents, IntentsRedirect, AppContexts, Parameters, Events } from './dialogflow-constants';
+import { Intents, IntentGroups, AppContexts, Parameters, Events } from './dialogflow-constants';
 import { getClosestStops } from './location';
 
 admin.initializeApp(functions.config().firebase)
@@ -22,15 +22,15 @@ app.middleware(conv => {
     responses.i18next.changeLanguage(conv.user.locale)
 })
 
-app.intent(Intents.CUANDO_LLEGA_CORNER_INTENT, async (conv, params) => {
+app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
     logIntent(conv)
-    const bus = params[Parameters.BUS_LINE_ARGUMENT] as string
-    const street = params[Parameters.STREET_ARGUMENT] as string
-    const intersection = params[Parameters.INTERSECTION_ARGUMENT] as string
+    const bus = params[Parameters.BUS_LINE] as string
+    const street = params[Parameters.STREET] as string
+    const intersection = params[Parameters.INTERSECTION] as string
 
     // If this intent is invoked then a corner-followup context is outputted
     // Remove stop-number-followup context in order for dialogflow to match followups to 'corner' intents
-    conv.contexts.delete(AppContexts.STOP_FOLLOWUP_CONTEXT)
+    conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
 
     try {
         const validCorners : Array<Corner> = await database.findValidCorners(db, bus, street, intersection)
@@ -70,20 +70,20 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     switch (stop[0]) {
         case "STOP":
             // do conv.followup with event
-            const context = conv.contexts.get(AppContexts.BUS_FOLLOWUP_CONTEXT)
+            const context = conv.contexts.get(AppContexts.BUS_FOLLOWUP)
             if (context !== undefined) {
                 const followupParams = {
-                    [Parameters.BUS_LINE_ARGUMENT]: context.parameters[Parameters.BUS_LINE_ARGUMENT],
-                    [Parameters.STOP_NUMBER_ARGUMENT]: stop[1]
+                    [Parameters.BUS_LINE]: context.parameters[Parameters.BUS_LINE],
+                    [Parameters.STOP_NUMBER]: stop[1]
                 }
                 conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
             } else {
-                conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER_ARGUMENT]: stop[1] })
+                conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: stop[1] })
                 // conv.ask(responses.i18next.t('errorOccurred'))
             }
             break;
         case "STOPINFO":
-            conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER_ARGUMENT]: stop[1] })
+            conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: stop[1] })
             break;
         default:
             conv.ask(responses.i18next.t('invalidOption'))
@@ -91,15 +91,15 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     }
 })
 
-app.intent(Intents.CUANDO_LLEGA_STOP_INTENT, async (conv, params) => {
+app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
     logIntent(conv)
     // console.log(JSON.stringify(conv.contexts))
-    const bus = params[Parameters.BUS_LINE_ARGUMENT] as string
-    const stop = params[Parameters.STOP_NUMBER_ARGUMENT] as string
-    
+    const bus = params[Parameters.BUS_LINE] as string
+    const stop = params[Parameters.STOP_NUMBER] as string
+
     // If this intent is invoked then a stop-number-followup context is outputted
     // Remove corner-followup context in order for dialogflow to match followups to 'stop' intents
-    conv.contexts.delete(AppContexts.CORNER_FOLLOWUP_CONTEXT)
+    conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
     
     // const busDoc = await database.getBusDocument(db, bus)
     // const data = busDoc.data()
@@ -165,11 +165,11 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
     }
 })
 
-app.intent(Intents.STOP_INFORMATION_INTENT, async (conv, params) => {
+app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
     logIntent(conv)
-    const stop = params[Parameters.STOP_NUMBER_ARGUMENT] as string
+    const stop = params[Parameters.STOP_NUMBER] as string
 
-    conv.contexts.delete(AppContexts.CORNER_FOLLOWUP_CONTEXT)
+    conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
 
     try {
         const doc = await database.getStopDocument(db, stop)
@@ -183,12 +183,6 @@ app.intent(Intents.STOP_INFORMATION_INTENT, async (conv, params) => {
     } catch (error) {
         conv.ask(responses.i18next.t('errorOccurred'))
     }
-})
-
-// Handler redirect
-Object.keys(IntentsRedirect).forEach(key => {
-    const intents = IntentsRedirect[key]
-    intents.forEach(i => app.intent(i, key))
 })
 
 export const cuandoLlegaFulfillment = functions.https.onRequest(app)

@@ -20,17 +20,20 @@ export const Intents = {
     STOP_INFORMATION_TRIGGER_INTENT: 'stop_information_trigger_intent'
 }
 
-export const IntentsRedirect = {
-    [Intents.CUANDO_LLEGA_STOP_INTENT]: [
+export const IntentGroups = {
+    STOP_INTENTS: [
+        Intents.CUANDO_LLEGA_STOP_INTENT,
         Intents.BUS_STOP_INTENT,
         Intents.STOP_OTHER_BUS_INTENT,
         Intents.STOP_SEARCH_INTENT
     ],
-    [Intents.CUANDO_LLEGA_CORNER_INTENT]: [
+    CORNER_INTENTS: [
+        Intents.CUANDO_LLEGA_CORNER_INTENT,
         Intents.BUS_CORNER_INTENT,
         Intents.CORNER_OTHER_BUS_INTENT
     ],
-    [Intents.STOP_INFORMATION_INTENT]: [
+    STOP_INFORMATION_INTENTS: [
+        Intents.STOP_INFORMATION_INTENT,
         Intents.STOP_INFORMATION_TRIGGER_INTENT,
         Intents.STOP_INFORMATION_FOLLOWUP_INTENT
     ]
@@ -42,14 +45,14 @@ export const Events = {
 }
 
 export const AppContexts = {
-    BUS_FOLLOWUP_CONTEXT: 'bus-followup',
-    STOP_FOLLOWUP_CONTEXT: 'stop-number-followup',
-    CORNER_FOLLOWUP_CONTEXT: 'corner-followup'
+    BUS_FOLLOWUP: 'bus-followup',
+    STOP_FOLLOWUP: 'stop-number-followup',
+    CORNER_FOLLOWUP: 'corner-followup'
 }
 
 export const Parameters = {
-    BUS_LINE_ARGUMENT: 'bus-line',
-    STREET_ARGUMENT: 'street',
-    INTERSECTION_ARGUMENT: 'intersection',
-    STOP_NUMBER_ARGUMENT: 'stop-number'
+    BUS_LINE: 'bus-line',
+    STREET: 'street',
+    INTERSECTION: 'intersection',
+    STOP_NUMBER: 'stop-number'
 }
