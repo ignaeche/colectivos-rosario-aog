@@ -16,7 +16,7 @@
     "firebase-functions": "^1.0.2",
     "geofire": "^4.1.2",
     "i18next": "^11.2.3",
-    "i18next-node-fs-backend": "^1.0.0",
+    "i18next-sync-fs-backend": "^1.1.0",
     "join-array": "^1.1.1",
     "jsdom": "^11.10.0",
     "remove-accents": "^0.4.2",
@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@types/i18next": "^8.4.3",
-    "@types/i18next-node-fs-backend": "0.0.29",
     "@types/jsdom": "^11.0.4",
     "@types/request-promise-native": "^1.0.14",
     "tslint": "^5.10.0",

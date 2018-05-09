@@ -1,12 +1,13 @@
 import * as i18next from 'i18next';
-import * as backend from 'i18next-node-fs-backend';
 import * as path from 'path';
+const backend = require('i18next-sync-fs-backend')
 const join = require('join-array')
 
 i18next
     .use(backend)
     .init({
         debug: true,
+        initImmediate: false,
         load: 'languageOnly', // load languages without region consideration
         lng: 'es',
         fallbackLng: 'es',
