@@ -5,7 +5,7 @@ import { dialogflow, List, Permission, DialogflowConversation, Contexts } from '
 import * as database from './database';
 import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
-import { Intents, IntentGroups, AppContexts, Parameters, Events } from './dialogflow-constants';
+import { Intents, IntentGroups, AppContexts, Parameters, Events, Payload } from './dialogflow-constants';
 import { getClosestStops } from './location';
 
 admin.initializeApp(functions.config().firebase)
@@ -111,6 +111,14 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
         // @ts-ignore: Property does not exist
         const { coordinates } = conv.data
         const locations: Array<StopLocation> = await getClosestStops(rtdb, coordinates)
+
+        if (locations.length === 0) {
+            return conv.ask(responses.negatives.noStopsNearYou())
+        }
+        if (locations.length === 1) {
+            return conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: locations.pop().stop, [Parameters.PAYLOAD]: 'ONE_STOP_FOUND' })
+        }
+
         const stopDocs: Array<Stop> = await database.getStopDocuments(db, locations.map(o => o.stop))
 
         const items = {}
@@ -153,6 +161,7 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
 
 app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
     const stop = params[Parameters.STOP_NUMBER] as string
+    const payload = params[Parameters.PAYLOAD] as Payload
 
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
 
@@ -160,6 +169,9 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
         const doc = await database.getStopDocument(db, stop)
         if (doc.exists) {
             const data = doc.data() as Stop
+            if (payload && payload === 'ONE_STOP_FOUND') {
+                conv.ask(responses.prompts.onlyOneStopFound())
+            }
             conv.ask(...responses.prompts.stopCard(data))
             return conv.ask(responses.suggestions.buses(data.buses, 3))
         } else {

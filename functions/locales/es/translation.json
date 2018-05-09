@@ -48,6 +48,8 @@
 
     "locationPermissionReason": "Para mostrar las paradas más cercanas",
     "couldntAccessLocation": "No pude acceder a tu ubicación.",
+    "noStopsNearYou": "No encontré ninguna parada cerca tuyo.",
+    "onlyOneStopFound": "Solo encontré esta parada cerca tuyo.",
     "stopDoesNotExist": "Lo siento pero la parada {{stop}} no existe.",
     "stopCardSimple": {
         "speech": "<speak><s>La parada {{stop.number}} se encuentra ubicada en la esquina de {{stop.street.desc}} y {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",

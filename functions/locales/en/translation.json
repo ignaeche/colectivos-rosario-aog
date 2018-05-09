@@ -48,6 +48,8 @@
 
     "locationPermissionReason": "To show the closest stops",
     "couldntAccessLocation": "I couldn't access your location",
+    "noStopsNearYou": "I didn't find any stops near you.",
+    "onlyOneStopFound": "I only found this stop near you.",
     "stopDoesNotExist": "I'm afraid stop {{stop}} does not exist.",
     "stopCardSimple": {
         "speech": "<speak><s>Stop {{stop.number}} is located on the corner of {{stop.street.desc}} and {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",

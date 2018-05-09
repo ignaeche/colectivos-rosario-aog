@@ -34,6 +34,9 @@ export const negatives = {
     'nonExistentStop': (stop: string) => {
         return createSimpleResponse('stopDoesNotExist', { stop })
     },
+    'noStopsNearYou': () => {
+        return createSimpleResponse('noStopsNearYou', undefined)
+    },
     'generalError': () => {
         return createSimpleResponse('errorOccurred', undefined)
     },
@@ -49,6 +52,9 @@ export const negatives = {
 }
 
 export const prompts = {
+    'onlyOneStopFound': () => {
+        return createSimpleResponse('onlyOneStopFound', undefined)
+    },
     'stopListItem': (stop, street, intersection) => {
         return {
             title: i18next.t('stopNumber', { stop }),

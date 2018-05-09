@@ -54,5 +54,8 @@ export const Parameters = {
     BUS_LINE: 'bus-line',
     STREET: 'street',
     INTERSECTION: 'intersection',
-    STOP_NUMBER: 'stop-number'
+    STOP_NUMBER: 'stop-number',
+    PAYLOAD: 'payload'
 }
+
+export type Payload = 'ONE_STOP_FOUND'
