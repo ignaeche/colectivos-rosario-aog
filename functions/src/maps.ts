@@ -3,20 +3,31 @@ import * as url from 'url'
 import * as crypto from 'crypto'
 
 const STATIC_MAPS_URL = 'https://maps.googleapis.com/maps/api/staticmap'
-const STATIC_MAPS_SIZE = '544x272'
+const STATIC_MAPS_SIZE = {
+    CARD_SIZE: '544x272',
+    LIST_SIZE: '144x144'
+}
 
-export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, language: string) {
+type ImageSize = 'CARD_SIZE' | 'LIST_SIZE'
+
+export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, language: string, size: ImageSize = 'CARD_SIZE') {
     const uri = url.parse(STATIC_MAPS_URL, true)
     const coords = [coordinates.latitude, coordinates.longitude].join(',')
     uri.query = {
         key: functions.config().maps.key,
         center: coords,
-        size: STATIC_MAPS_SIZE,
+        size: STATIC_MAPS_SIZE[size],
         zoom: '18',
         scale: '2',
         format: 'png',
         language: language,
         markers: coords
+    }
+    if (size === 'CARD_SIZE') {
+        uri.query.style = 'feature:poi|element:labels.text|visibility:off'
+    }
+    if (size === 'LIST_SIZE') {
+        uri.query.style = 'feature:poi|element:labels|visibility:off'
     }
     return sign(url.format(uri), functions.config().maps.secret)
 }

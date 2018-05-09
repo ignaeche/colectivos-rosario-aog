@@ -4,7 +4,7 @@ import { StopLocation } from './models';
 // import * as util from 'util'
 const GeoFire = require('geofire')
 
-const QUERY_LIMIT = 9
+const QUERY_LIMIT = 6
 const RADIUS_LIMIT = 1
 
 function getClosestStopsCallback(db: admin.database.Database, coordinates: GoogleTypeLatLng, callback) {

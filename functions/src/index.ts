@@ -128,7 +128,7 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
         const items = {}
         stopDocs.forEach(stop => {
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
-            items[`STOPINFO_${stop.number}`] = responses.prompts.stopLocationListItem(stop.number, distance, stop.street.desc, stop.intersection.desc)
+            items[`STOPINFO_${stop.number}`] = responses.prompts.stopLocationListItem(stop, distance)
         })
         conv.ask(responses.i18next.t('foundTheseStops'))
         conv.ask(new List({
