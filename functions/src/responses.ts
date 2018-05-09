@@ -24,13 +24,31 @@ function determineArrival(keys: string[], time: ArrivalTime) {
     }
 }
 
-export const prompts = {
-    'noStopsFound': (bus, street, intersection) => {
+export const negatives = {
+    'noStopsFound': (bus: string, street: string, intersection: string) => {
         return createSimpleResponse('noStopsFound', { bus, street, intersection })
     },
-    'invalidStop': (bus, stop) => {
+    'invalidStop': (bus: string, stop: string) => {
         return createSimpleResponse('invalidStop', { bus, stop })
     },
+    'nonExistentStop': (stop: string) => {
+        return createSimpleResponse('stopDoesNotExist', { stop })
+    },
+    'generalError': () => {
+        return createSimpleResponse('errorOccurred', undefined)
+    },
+    'locationNotGranted': () => {
+        return createSimpleResponse('couldntAccessLocation', undefined)
+    },
+    'invalidOption': () => {
+        return createSimpleResponse('invalidOption', undefined)
+    },
+    'noOption': () => {
+        return createSimpleResponse('noOption', undefined)
+    }
+}
+
+export const prompts = {
     'stopListItem': (stop, street, intersection) => {
         return {
             title: i18next.t('stopNumber', { stop }),

@@ -33,7 +33,7 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
 
         const numberOfStops = validCorners.length
         if (numberOfStops === 0) {
-            conv.ask(responses.prompts.noStopsFound(bus, street, intersection))
+            conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
         } else if (numberOfStops === 1) {
             const corner = validCorners[0]
             // request here
@@ -52,37 +52,32 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
         }
     } catch (error) {
         console.error(error)
-        conv.ask(responses.i18next.t('errorOccurred'))
+        conv.ask(responses.negatives.generalError())
     }
 })
 
 app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     if (!option) {
-        conv.ask(responses.i18next.t('noOption'))
-        return
+        return conv.ask(responses.negatives.noOption())
     }
     const stop = option.toString().split('_')
     switch (stop[0]) {
         case "STOP":
-            // do conv.followup with event
+            // If bus-followup context is not present, present stop information
             const context = conv.contexts.get(AppContexts.BUS_FOLLOWUP)
             if (context !== undefined) {
                 const followupParams = {
                     [Parameters.BUS_LINE]: context.parameters[Parameters.BUS_LINE],
                     [Parameters.STOP_NUMBER]: stop[1]
                 }
-                conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
+                return conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
             } else {
-                conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: stop[1] })
-                // conv.ask(responses.i18next.t('errorOccurred'))
+                return conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: stop[1] })
             }
-            break;
         case "STOPINFO":
-            conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: stop[1] })
-            break;
+            return conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: stop[1] })
         default:
-            conv.ask(responses.i18next.t('invalidOption'))
-            break;
+            return conv.ask(responses.negatives.invalidOption())
     }
 })
 
@@ -103,11 +98,11 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
             // request
             conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos`)
         } else {
-            conv.ask(responses.prompts.invalidStop(bus, stop))
+            conv.ask(responses.negatives.invalidStop(bus, stop))
         }
     } catch (error) {
         console.error(error)
-        conv.ask(responses.i18next.t('errorOccurred'))
+        conv.ask(responses.negatives.generalError())
     }
 })
 
@@ -124,25 +119,25 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
             items[`STOPINFO_${stop.number}`] = responses.prompts.stopLocationListItem(stop, distance)
         })
         conv.ask(responses.i18next.t('foundTheseStops'))
-        conv.ask(new List({
+        return conv.ask(new List({
             title: responses.i18next.t('stops'),
             items
         }))
     } catch (error) {
-        conv.ask(responses.i18next.t('errorOccurred'))
+        console.error(error)
+        return conv.ask(responses.negatives.generalError())
     }
 }
 
 app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
     // @ts-ignore: Property does not exist
     if (!conv.data.coordinates) {
-        conv.ask(new Permission({
+        return conv.ask(new Permission({
             context: responses.i18next.t('locationPermissionReason'),
             permissions: 'DEVICE_PRECISE_LOCATION'
         }))
-    } else {
-        await showStopLocationList(conv)
     }
+    return showStopLocationList(conv)
 })
 
 app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
@@ -150,9 +145,9 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
         const { coordinates } = conv.device.location
         // @ts-ignore: Property does not exit
         conv.data.coordinates = coordinates
-        await showStopLocationList(conv)
+        return showStopLocationList(conv)
     } else {
-        conv.ask(responses.i18next.t('couldntAccessLocation'))
+        return conv.ask(responses.negatives.locationNotGranted())
     }
 })
 
@@ -166,12 +161,13 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
         if (doc.exists) {
             const data = doc.data() as Stop
             conv.ask(...responses.prompts.stopCard(data))
-            conv.ask(responses.suggestions.buses(data.buses, 3))
+            return conv.ask(responses.suggestions.buses(data.buses, 3))
         } else {
-            conv.ask(responses.i18next.t('stopDoesNotExist', { stop }))
+            return conv.ask(responses.negatives.nonExistentStop(stop))
         }
     } catch (error) {
-        conv.ask(responses.i18next.t('errorOccurred'))
+        console.error(error)
+        return conv.ask(responses.negatives.generalError())
     }
 })
 
