@@ -119,10 +119,10 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
             return conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: locations.pop().stop, [Parameters.PAYLOAD]: 'ONE_STOP_FOUND' })
         }
 
-        const stopDocs: Array<Stop> = await database.getStopDocuments(db, locations.map(o => o.stop))
+        const stops: Array<Stop> = await database.getStops(db, locations.map(o => o.stop))
 
         const items = {}
-        stopDocs.forEach(stop => {
+        stops.forEach(stop => {
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
             items[`STOPINFO_${stop.number}`] = responses.prompts.stopLocationListItem(stop, distance)
         })

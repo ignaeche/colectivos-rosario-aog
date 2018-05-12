@@ -45,5 +45,5 @@ export interface StopLocation {
 }
 
 export class Corner {
-    constructor(public street: Street, public intersection: Street, public stop: string) { }
+    constructor(public bus: Bus, public street: Street, public intersection: Street, public stop: string) { }
 }
