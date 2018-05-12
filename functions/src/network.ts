@@ -95,7 +95,7 @@ function requestAllBusesArrivalTime(stop: string) {
 }
 
 function parseAllBusesArrivalTime(arrival: string): BusArrival {
-    const regexp = /linea:\s(.*)\s(?:(llegando)|(\d+)\smin){1}/i;
+    const regexp = /linea:\s(.*)\s(?:(llegando)|(\d+)\smin\s?(\(Hora Programada\))?){1}/i;
     const match = arrival.match(regexp)
     // Group 1 is flag
     const flag = match[1]
@@ -104,13 +104,13 @@ function parseAllBusesArrivalTime(arrival: string): BusArrival {
         // llegando was matched
         return { flag, time: { arriving: true } }
     } else {
-        // N min was matched, N is in group 3
+        // N min was matched, N is in group 3; group 4 is 'hora programada'
         return {
             flag,
             time: {
                 arriving: false,
                 minutes: match[3],
-                scheduled: false
+                scheduled: match[4] !== undefined
             }
         }
     }
