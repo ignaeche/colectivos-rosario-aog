@@ -1,20 +1,24 @@
 {
-    "invalidStop": {
-        "speech": "Stop {{stop}} is not a valid stop",
-        "text": "Stop {{stop}} is not a valid stop for the bus {{bus}}"
+    "stop": {
+        "number": "Stop {{stop}}",
+        "invalid": "I'm afraid stop {{stop}} is not a valid stop for bus {{bus}}",
+        "noneFoundOnCorner": "I didn't find any stops on the corner of {{street}} and {{intersection}} for bus {{bus}}",
+        "nonExistent": "I'm afraid stop {{stop}} does not exist",
+        "noneNearYou": "I didn't find any stops near you.",
+        "pickOne": "Pick a stop",
+        "foundThese": "I found these stops",
+        "onlyOneNearYou": "I only found this stop near you."
     },
-    "noStopsFound": {
-        "speech": "No stops found on this corner",
-        "text": "No stops were found on the corner of {{street}} and {{intersection}} for the bus {{bus}}"
-    },
+
     "corner": "{{street}} and {{intersection}}",
-    "distanceAndCorner": "$t(distanceMeters, {'count': {{distance}} }) away on the corner of {{street}} and {{intersection}}",
-    "distanceMeters": "{{count}} meters",
-    "distanceMeters_plural": "{{count}} meters",
-    "stopNumber": "Stop {{stop}}",
-    "pickStop": "Pick a stop",
+
+    "distance": {
+        "awayCorner": "$t(distance.meters, {'count': {{distance}} }) away on the corner of {{street}} and {{intersection}}",
+        "meters": "{{count}} meter",
+        "meters_plural": "{{count}} meters"
+    },
+
     "stops": "Stops",
-    "foundTheseStops": "I found these stops",
 
     "foundArrivalTime": {
         "speech": "I found the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}",
@@ -48,9 +52,6 @@
 
     "locationPermissionReason": "To show the closest stops",
     "couldntAccessLocation": "I couldn't access your location",
-    "noStopsNearYou": "I didn't find any stops near you.",
-    "onlyOneStopFound": "I only found this stop near you.",
-    "stopDoesNotExist": "I'm afraid stop {{stop}} does not exist.",
     "stopCardSimple": {
         "speech": "<speak><s>Stop {{stop.number}} is located on the corner of {{stop.street.desc}} and {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
         "text": "Here you go"

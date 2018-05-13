@@ -1,6 +1,6 @@
 import i18next from './i18next';
 import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button, OptionItem } from 'actions-on-google';
-import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop } from './models';
+import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop, Street } from './models';
 import { randomPop, takeRandom } from './util';
 import { getStopLocationImage, getStopMapsLink } from './maps';
 
@@ -26,16 +26,16 @@ function determineArrival(keys: string[], time: ArrivalTime) {
 
 export const negatives = {
     'noStopsFound': (bus: string, street: string, intersection: string) => {
-        return createSimpleResponse('noStopsFound', { bus, street, intersection })
+        return createSimpleResponse('stop.noneFoundOnCorner', { bus, street, intersection })
     },
     'invalidStop': (bus: string, stop: string) => {
-        return createSimpleResponse('invalidStop', { bus, stop })
+        return createSimpleResponse('stop.invalid', { bus, stop })
     },
     'nonExistentStop': (stop: string) => {
-        return createSimpleResponse('stopDoesNotExist', { stop })
+        return createSimpleResponse('stop.nonExistent', { stop })
     },
     'noStopsNearYou': () => {
-        return createSimpleResponse('noStopsNearYou', undefined)
+        return createSimpleResponse('stop.noneNearYou', undefined)
     },
     'generalError': () => {
         return createSimpleResponse('errorOccurred', undefined)
@@ -51,25 +51,51 @@ export const negatives = {
     }
 }
 
+export const items = {
+    'genericStop': (descriptionKey: string, stop: Stop, distance?: number) => {
+        const tOptions = { street: stop.street.desc, intersection: stop.intersection.desc }
+        if (distance) {
+            tOptions['distance'] = distance
+        }
+        const item: OptionItem = {
+            title: i18next.t('stop.number', { stop: stop.number }),
+            description: i18next.t(descriptionKey, tOptions)
+        }
+        if (stop.location) {
+            item.image = new Image({
+                url: getStopLocationImage(stop.location, i18next.language, 'LIST_SIZE'),
+                alt: i18next.t('stop.number', { stop: stop.number })
+            })
+        }
+        return item
+    },
+    'stop': (stop: Stop) => {
+        return items.genericStop('corner', stop)
+    },
+    'stopDistanceAway': (stop: Stop, distance: number) => {
+        return items.genericStop('distance.awayCorner', stop, distance)
+    }
+}
+
 export const prompts = {
     'onlyOneStopFound': () => {
-        return createSimpleResponse('onlyOneStopFound', undefined)
+        return createSimpleResponse('stop.onlyOneNearYou', undefined)
     },
     'stopListItem': (stop, street, intersection) => {
         return {
-            title: i18next.t('stopNumber', { stop }),
+            title: i18next.t('stop.number', { stop }),
             description: i18next.t('corner', { street, intersection })
         }
     },
     'stopLocationListItem': (stop: Stop, distance) => {
         const item: OptionItem = {
-            title: i18next.t('stopNumber', { stop: stop.number }),
-            description: i18next.t('distanceAndCorner', { distance, street: stop.street.desc, intersection: stop.intersection.desc })
+            title: i18next.t('stop.number', { stop: stop.number }),
+            description: i18next.t('distance.awayCorner', { distance, street: stop.street.desc, intersection: stop.intersection.desc })
         }
         if (stop.location) {
             item.image = new Image({
                 url: getStopLocationImage(stop.location, i18next.language, 'LIST_SIZE'),
-                alt: i18next.t('stopNumber', { stop: stop.number })
+                alt: i18next.t('stop.number', { stop: stop.number })
             })
         }
         return item
@@ -114,14 +140,14 @@ export const prompts = {
     },
     'stopCard': (stop: Stop) => {
         const options: BasicCardOptions = {
-            title: i18next.t('stopNumber', { stop: stop.number }),
+            title: i18next.t('stop.number', { stop: stop.number }),
             subtitle: i18next.t('corner', { street: stop.street.desc, intersection: stop.intersection.desc }),
             text: i18next.t('stopCard', { stop })
         }
         if (stop.location) {
             options.image = new Image({
                 url: getStopLocationImage(stop.location, i18next.language),
-                alt: i18next.t('stopNumber', { stop: stop.number }),
+                alt: i18next.t('stop.number', { stop: stop.number }),
             })
             options.display = 'CROPPED'
             options.buttons = new Button({

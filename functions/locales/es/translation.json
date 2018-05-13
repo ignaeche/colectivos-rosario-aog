@@ -1,20 +1,24 @@
 {
-    "invalidStop": {
-        "speech": "La parada {{stop}} no es válida",
-        "text": "La parada {{stop}} no es válida para la línea {{bus}}"
+    "stop": {
+        "number": "Parada {{stop}}",
+        "invalid": "Me temo que la parada {{stop}} no es válida para la línea {{bus}}",
+        "noneFoundOnCorner": "No encontré ninguna parada en la esquina de {{street}} y {{intersection}} para la línea {{bus}}",
+        "nonExistent": "Me temo que la parada {{stop}} no existe",
+        "noneNearYou": "No encontré ninguna parada cerca tuyo.",
+        "pickOne": "Escoja una parada",
+        "foundThese": "Encontré estas paradas",
+        "onlyOneNearYou": "Solo encontré esta parada cerca tuyo."
     },
-    "noStopsFound": {
-        "speech": "No se encontraron paradas en esta esquina",
-        "text": "No se encontraron paradas en la esquina de {{street}} y {{intersection}} para la línea {{bus}}"
-    },
+
     "corner": "{{street}} y {{intersection}}",
-    "distanceAndCorner": "A $t(distanceMeters, {'count': {{distance}} }) en la esquina de {{street}} y {{intersection}}",
-    "distanceMeters": "{{count}} metro",
-    "distanceMeters_plural": "{{count}} metros",
-    "stopNumber": "Parada {{stop}}",
-    "pickStop": "Escoja una parada",
+
+    "distance": {
+        "awayCorner": "A $t(distance.meters, {'count': {{distance}} }) en la esquina de {{street}} y {{intersection}}",
+        "meters": "{{count}} metro",
+        "meters_plural": "{{count}} metros"
+    },
+    
     "stops": "Paradas",
-    "foundTheseStops": "Encontré estas paradas",
 
     "foundArrivalTime": {
         "speech": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
@@ -48,9 +52,6 @@
 
     "locationPermissionReason": "Para mostrar las paradas más cercanas",
     "couldntAccessLocation": "No pude acceder a tu ubicación.",
-    "noStopsNearYou": "No encontré ninguna parada cerca tuyo.",
-    "onlyOneStopFound": "Solo encontré esta parada cerca tuyo.",
-    "stopDoesNotExist": "Lo siento pero la parada {{stop}} no existe.",
     "stopCardSimple": {
         "speech": "<speak><s>La parada {{stop.number}} se encuentra ubicada en la esquina de {{stop.street.desc}} y {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
         "text": "Aquí tienes"
