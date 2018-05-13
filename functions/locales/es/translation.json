@@ -7,7 +7,15 @@
         "noneNearYou": "No encontré ninguna parada cerca tuyo.",
         "pickOne": "Escoja una parada",
         "foundThese": "Encontré estas paradas",
-        "onlyOneNearYou": "Solo encontré esta parada cerca tuyo."
+        "onlyOneNearYou": "Solo encontré esta parada cerca tuyo",
+        "card": {
+            "speech": "<speak><s>La parada {{stop.number}} se encuentra ubicada en la esquina de {{stop.street.desc}} y {{stop.intersection.desc}}.</s><s>$t(stop.servicedBy.bus, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
+            "text": "La parada __{{stop.number}}__ se encuentra ubicada en la esquina de _{{stop.street.desc}}_ y _{{stop.intersection.desc}}_. $t(stop.servicedBy.bus, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}."
+        },
+        "servicedBy": {
+            "bus": "La línea que presta servicio aquí es",
+            "bus_plural": "Las líneas que prestan servicio aquí son"
+        }
     },
 
     "corner": "{{street}} y {{intersection}}",
@@ -44,23 +52,29 @@
     "arrivalNextScheduled": "está programado para llegar en $t(minutes, {'count': {{minutes}} })",
     "arrivalNext": "llega en $t(minutes, {'count': {{minutes}} })",
 
-    "otherBusSuggestion": "¿Y el {{bus}}?",
+    "suggestions": {
+        "otherBus": "¿Y el {{bus}}?"
+    },
 
-    "invalidOption": "Seleccionaste una opción no válida",
-    "noOption": "No seleccionaste ninguna opción",
+    "options": {
+        "invalid": "Me temo que esa es una opción no válida",
+        "none": "Lo siento pero ninguna opción fue seleccionada"
+    },
     "errorOccurred": "Lo siento. Ocurrió un error.",
 
-    "locationPermissionReason": "Para mostrar las paradas más cercanas",
-    "couldntAccessLocation": "No pude acceder a tu ubicación.",
-    "stopCardSimple": {
-        "speech": "<speak><s>La parada {{stop.number}} se encuentra ubicada en la esquina de {{stop.street.desc}} y {{stop.intersection.desc}}.</s><s>$t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
-        "text": "Aquí tienes"
+    "location": {
+        "permissionReason": "Para mostrar las paradas más cercanas",
+        "couldntAccess": "No pude acceder a tu ubicación"
     },
-    "stopCard": "La parada __{{stop.number}}__ se encuentra ubicada en la esquina de _{{stop.street.desc}}_ y _{{stop.intersection.desc}}_. $t(busLineService, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.",
-    "busLineService": "La línea que presta servicio aquí es",
-    "busLineService_plural": "Las líneas que prestan servicio aquí son",
-    "andSeparator": " y ",
-    "joinArticle": "la {{value}}",
 
-    "viewOnGoogleMaps": "Ver en Google Maps"
+    "joinArray": {
+        "buses": {
+            "and": " y ",
+            "article": "la {{value}}"
+        }
+    },
+
+    "viewOnGoogleMaps": "Ver en Google Maps",
+
+    "hereYouGo": "Aquí tienes"
 }

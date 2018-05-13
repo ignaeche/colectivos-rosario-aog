@@ -20,8 +20,8 @@ i18next
         interpolation: {
             format: function (value, format, lng) {
                 if (format === 'join') {
-                    const fn = v => i18next.t('joinArticle', { value: v })
-                    return join(value, ', ', i18next.t('andSeparator'), null, null, fn)
+                    const fn = v => i18next.t('joinArray.buses.article', { value: v })
+                    return join(value, ', ', i18next.t('joinArray.buses.and'), null, null, fn)
                 }
                 if (format === 'count') {
                     return value.length

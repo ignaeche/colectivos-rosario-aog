@@ -140,7 +140,7 @@ app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
     // @ts-ignore: Property does not exist
     if (!conv.data.coordinates) {
         return conv.ask(new Permission({
-            context: responses.i18next.t('locationPermissionReason'),
+            context: responses.i18next.t('location.permissionReason'),
             permissions: 'DEVICE_PRECISE_LOCATION'
         }))
     }
@@ -168,10 +168,7 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
         const doc = await database.getStopDocument(db, stop)
         if (doc.exists) {
             const data = doc.data() as Stop
-            if (payload && payload === 'ONE_STOP_FOUND') {
-                conv.ask(responses.prompts.onlyOneStopFound())
-            }
-            conv.ask(...responses.prompts.stopCard(data))
+            conv.ask(...responses.rich.stop_card(data, payload && payload === 'ONE_STOP_FOUND'))
             return conv.ask(responses.suggestions.buses(data.buses, 3))
         } else {
             return conv.ask(responses.negatives.nonExistentStop(stop))

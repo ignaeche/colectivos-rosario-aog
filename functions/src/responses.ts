@@ -41,13 +41,13 @@ export const negatives = {
         return createSimpleResponse('errorOccurred', undefined)
     },
     'locationNotGranted': () => {
-        return createSimpleResponse('couldntAccessLocation', undefined)
+        return createSimpleResponse('location.couldntAccess', undefined)
     },
     'invalidOption': () => {
-        return createSimpleResponse('invalidOption', undefined)
+        return createSimpleResponse('options.invalid', undefined)
     },
     'noOption': () => {
-        return createSimpleResponse('noOption', undefined)
+        return createSimpleResponse('options.none', undefined)
     }
 }
 
@@ -78,9 +78,6 @@ export const items = {
 }
 
 export const prompts = {
-    'onlyOneStopFound': () => {
-        return createSimpleResponse('stop.onlyOneNearYou', undefined)
-    },
     'foundArrivalTimes': (bus: Bus, corner: Corner) => {
         return new SimpleResponse(i18next.t('foundArrivalTime', {
             bus: bus.name,
@@ -118,12 +115,15 @@ export const prompts = {
     },
     'arrivalTimesComplete': (bus: Bus, corner: Corner, arrivalTimes: Map<string, BusArrival[]>) => {
         return [prompts.foundArrivalTimes(bus, corner), prompts.arrivalTimes(arrivalTimes)]
-    },
-    'stopCard': (stop: Stop) => {
+    }
+}
+
+export const rich = {
+    'stop_card': (stop: Stop, onlyOneStop: boolean = false) => {
         const options: BasicCardOptions = {
             title: i18next.t('stop.number', { stop: stop.number }),
             subtitle: i18next.t('corner', { street: stop.street.desc, intersection: stop.intersection.desc }),
-            text: i18next.t('stopCard', { stop })
+            text: i18next.t('stop.card.text', { stop })
         }
         if (stop.location) {
             options.image = new Image({
@@ -137,15 +137,19 @@ export const prompts = {
             })
         }
         return [
-            createSimpleResponse('stopCardSimple', { stop }),
+            new SimpleResponse({
+                speech: i18next.t('stop.card.speech', { stop }),
+                text: i18next.t(onlyOneStop ? 'stop.onlyOneNearYou': 'hereYouGo')
+            }),
             new BasicCard(options)
         ]
     }
 }
+
 export const suggestions = {
     'buses': (buses: Array<string>, howMany: number) => {
         const list = takeRandom(buses, howMany)
-        return new Suggestions(list.sort().map(bus => i18next.t('otherBusSuggestion', { bus })))
+        return new Suggestions(list.sort().map(bus => i18next.t('suggestions.otherBus', { bus })))
     }
 }
 
