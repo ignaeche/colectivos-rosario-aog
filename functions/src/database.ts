@@ -71,7 +71,9 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
             streetData.intersections.filter(i => predicateStreetName(i, regExp))
             .forEach(i => {
                 i.stops.forEach(stop => {
-                    validCorners.push(new Corner(busData, streetData, i, stop))
+                    stop.street = streetData
+                    stop.intersection = i
+                    validCorners.push(new Corner(busData, stop))
                 })
             })
         }

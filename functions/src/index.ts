@@ -36,13 +36,12 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
         } else if (numberOfStops === 1) {
             const corner = validCorners[0]
-            // request here
-            conv.ask(`La línea ${bus} llega a la parada de ${corner.street.desc} y ${corner.intersection.desc}` +
-                ` (parada ${corner.stop}) en 10 minutos.`)
+            // Probable solution; may make request here in order to keep corner context
+            conv.followup(Events.STOP_SEARCH_EVENT, { [Parameters.BUS_LINE]: bus, [Parameters.STOP_NUMBER]: corner.stop.number })
         } else {
             const items = {}
             validCorners.forEach(corner => {
-                items[`STOP_${corner.stop}`] = responses.prompts.stopListItem(corner.stop, corner.street.desc, corner.intersection.desc)
+                items[`STOP_${corner.stop.number}`] = responses.items.stop(corner.stop)
             });
             conv.ask(responses.i18next.t('stop.pickOne'))
             conv.ask(new List({
@@ -124,7 +123,7 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
         const items = {}
         stops.forEach(stop => {
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
-            items[`STOPINFO_${stop.number}`] = responses.prompts.stopLocationListItem(stop, distance)
+            items[`STOPINFO_${stop.number}`] = responses.items.stopDistanceAway(stop, distance)
         })
         conv.ask(responses.i18next.t('stop.foundThese'))
         return conv.ask(new List({

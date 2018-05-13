@@ -81,31 +81,12 @@ export const prompts = {
     'onlyOneStopFound': () => {
         return createSimpleResponse('stop.onlyOneNearYou', undefined)
     },
-    'stopListItem': (stop, street, intersection) => {
-        return {
-            title: i18next.t('stop.number', { stop }),
-            description: i18next.t('corner', { street, intersection })
-        }
-    },
-    'stopLocationListItem': (stop: Stop, distance) => {
-        const item: OptionItem = {
-            title: i18next.t('stop.number', { stop: stop.number }),
-            description: i18next.t('distance.awayCorner', { distance, street: stop.street.desc, intersection: stop.intersection.desc })
-        }
-        if (stop.location) {
-            item.image = new Image({
-                url: getStopLocationImage(stop.location, i18next.language, 'LIST_SIZE'),
-                alt: i18next.t('stop.number', { stop: stop.number })
-            })
-        }
-        return item
-    },
     'foundArrivalTimes': (bus: Bus, corner: Corner) => {
         return new SimpleResponse(i18next.t('foundArrivalTime', {
             bus: bus.name,
-            street: corner.street.desc,
-            intersection: corner.intersection.desc,
-            stop: corner.stop
+            street: corner.stop.street.desc,
+            intersection: corner.stop.intersection.desc,
+            stop: corner.stop.number
         }))
     },
     'arrivalTimes': (arrivalTimes: Map<string, BusArrival[]>) => {

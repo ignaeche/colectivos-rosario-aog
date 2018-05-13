@@ -9,7 +9,7 @@ export interface Street {
     id: number,
     desc: string,
     intersections?: Street[]
-    stops?: string[]
+    stops?: Stop[]
 }
 
 export interface BusArrival {
@@ -45,5 +45,5 @@ export interface StopLocation {
 }
 
 export class Corner {
-    constructor(public bus: Bus, public street: Street, public intersection: Street, public stop: string) { }
+    constructor(public bus: Bus, public stop: Stop) { }
 }
