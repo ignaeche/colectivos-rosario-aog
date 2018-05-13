@@ -28,29 +28,32 @@
     
     "stops": "Paradas",
 
-    "foundArrivalTime": {
-        "speech": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
-        "text": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}"
-    },
-    "arrival": {
-        "speech": "<s>La línea {{flag}} {{arrivesIn}}.</s>",
-        "text": "La línea {{flag}} {{arrivesIn}}."
-    },
-    "nextBus": {
-        "speech": "<s>El próximo {{arrivesIn}}.</s>",
-        "text": "El próximo {{arrivesIn}}."
-    },
-
     "minutes": "{{count}} minuto",
     "minutes_plural": "{{count}} minutos",
 
-    "arrivalIsArriving": "está llegando",
-    "arrivalInMinutesScheduled": "está programada para llegar en $t(minutes, {'count': {{minutes}} })",
-    "arrivalInMinutes": "llega en $t(minutes, {'count': {{minutes}} })",
-
-    "arrivalNextIsArriving": "está llegando",
-    "arrivalNextScheduled": "está programado para llegar en $t(minutes, {'count': {{minutes}} })",
-    "arrivalNext": "llega en $t(minutes, {'count': {{minutes}} })",
+    "arrivals": {
+        "foundTimes": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
+        "sentences": {
+            "firstBus": {
+                "speech": "<s>La línea {{flag}} {{arrivesIn}}.</s>",
+                "text": "La línea {{flag}} {{arrivesIn}}."
+            },
+            "nextBus": {
+                "speech": "<s>El próximo {{arrivesIn}}.</s>",
+                "text": "El próximo {{arrivesIn}}."
+            }
+        },
+        "bus": {
+            "arriving": "está llegando",
+            "arrivesInScheduled": "está programada para llegar en $t(minutes, {'count': {{minutes}} })",
+            "arrivesIn": "llega en $t(minutes, {'count': {{minutes}} })"
+        },
+        "nextBus": {
+            "arriving": "está llegando",
+            "arrivesInScheduled": "está programado para llegar en $t(minutes, {'count': {{minutes}} })",
+            "arrivesIn": "llega en $t(minutes, {'count': {{minutes}} })"
+        }
+    },
 
     "suggestions": {
         "otherBus": "¿Y el {{bus}}?"
