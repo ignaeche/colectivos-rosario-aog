@@ -30,7 +30,9 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
     conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
 
     try {
-        const validCorners : Array<Corner> = await database.findValidCorners(db, bus, street, intersection)
+        const document = await database.getBusDocument(db, bus)
+        const busData = document.data() as Bus
+        const validCorners: Array<Corner> = await database.findValidCorners(db, busData, street, intersection)
 
         const size = validCorners.length
         if (size === 0) {
@@ -42,7 +44,7 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             const arrival = await SingleBusArrivalTime.get(corner.bus, corner.stop.number)
             if (arrival === 'NO_ARRIVALS') {
                 return conv.ask(responses.arrivals.noneFound(corner))
-        } else {
+            } else {
                 return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
         } else {
@@ -106,10 +108,10 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
             // request
             const corner = new Corner(busData, stopData)
             const arrival = await SingleBusArrivalTime.get(busData, stopData.number)
+            conv.ask(responses.suggestions.buses(stopData.buses, 2))
             if (arrival === 'NO_ARRIVALS') {
                 return conv.ask(responses.arrivals.noneFound(corner))
             } else {
-                conv.ask(responses.suggestions.buses(stopData.otherBuses, 2))
                 return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
         } else {

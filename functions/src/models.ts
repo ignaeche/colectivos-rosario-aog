@@ -2,7 +2,8 @@ export interface Bus {
     name: string,
     id: number,
     entity: number,
-    streets?: Street[]
+    streets: Street[],
+    stopSelection: Array<string>
 }
 
 export interface Street {
@@ -33,8 +34,8 @@ export interface Stop {
     number: string,
     street: Street,
     intersection: Street,
-    buses?: Array<string>,
-    otherBuses?: Array<string>,
+    buses: Array<string>,
+    nearbyStops: Array<string>,
     location?: FirebaseFirestore.GeoPoint
 }
 

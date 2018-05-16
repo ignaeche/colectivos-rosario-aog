@@ -47,10 +47,8 @@ function predicateStreetName(street: Street, regExp: RegExp) {
     return regExp.test(desc)
 }
 
-export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: string, street: string, intersection: string) {
-    const document = await getBusDocument(db, bus)
-    const busData = document.data() as Bus
-    const streets: Array<Street> = busData.streets
+export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: Bus, street: string, intersection: string) {
+    const streets: Array<Street> = bus.streets
     const validCorners: Array<Corner> = []
 
     // Find matching streets and construct promise
@@ -58,7 +56,7 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
     let regExp = wildcardRegExp(street)
     streets.filter(s => predicateStreetName(s, regExp))
     .forEach(s => { // forEach street s
-        promises.push(getBusStreetDocument(db, bus, s))
+        promises.push(getBusStreetDocument(db, bus.name, s))
     });
 
     const docs = await Promise.all(promises)
@@ -73,7 +71,7 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: str
                 i.stops.forEach(stop => {
                     stop.street = streetData
                     stop.intersection = i
-                    validCorners.push(new Corner(busData, stop))
+                    validCorners.push(new Corner(bus, stop))
                 })
             })
         }
