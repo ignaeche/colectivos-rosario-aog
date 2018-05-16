@@ -3,7 +3,7 @@ import { Response } from 'request';
 import { JSDOM } from 'jsdom';
 import { Bus, BusArrival, ArrivalTime } from './models';
 
-class SingleBusArrivalTime {
+export class SingleBusArrivalTime {
     private static fetch(bus: Bus, stop: string) {
         const formData = {
             parada: stop,
@@ -67,11 +67,12 @@ class SingleBusArrivalTime {
     }
 
     static async get(bus: Bus, stop: string) {
-        const response: Response = await SingleBusArrivalTime.fetch(bus, stop)
-        console.log(`Arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
         try {
+            const response: Response = await SingleBusArrivalTime.fetch(bus, stop)
+            console.log(`Arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
             return SingleBusArrivalTime.process(response.body)
         } catch (error) {
+            console.error(error)
             return 'NO_ARRIVALS'
         }
     }
@@ -136,11 +137,12 @@ class AllBusesArrivalTime {
     }
 
     static async get(stop: string) {
-        const response: Response = await AllBusesArrivalTime.fetch(stop)
-        console.log(`All buses arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
         try {
+            const response: Response = await AllBusesArrivalTime.fetch(stop)
+            console.log(`All buses arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
             return AllBusesArrivalTime.process(response.body)
         } catch (error) {
+            console.error(error)
             return 'NO_ARRIVALS'
         }
     }

@@ -7,6 +7,7 @@ import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
 import { Intents, IntentGroups, AppContexts, Parameters, Events, Payload } from './dialogflow-constants';
 import { getClosestStops } from './location';
+import { SingleBusArrivalTime } from './arrivals';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
@@ -31,27 +32,33 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
     try {
         const validCorners : Array<Corner> = await database.findValidCorners(db, bus, street, intersection)
 
-        const numberOfStops = validCorners.length
-        if (numberOfStops === 0) {
-            conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
-        } else if (numberOfStops === 1) {
+        const size = validCorners.length
+        if (size === 0) {
+            return conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
+        } else if (size === 1) {
             const corner = validCorners[0]
             // Probable solution; may make request here in order to keep corner context
-            conv.followup(Events.STOP_SEARCH_EVENT, { [Parameters.BUS_LINE]: bus, [Parameters.STOP_NUMBER]: corner.stop.number })
+            // conv.followup(Events.STOP_SEARCH_EVENT, { [Parameters.BUS_LINE]: bus, [Parameters.STOP_NUMBER]: corner.stop.number })
+            const arrival = await SingleBusArrivalTime.get(corner.bus, corner.stop.number)
+            if (arrival === 'NO_ARRIVALS') {
+                return conv.ask(responses.arrivals.noneFound(corner))
+        } else {
+                return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
+            }
         } else {
             const items = {}
             validCorners.forEach(corner => {
                 items[`STOP_${corner.stop.number}`] = responses.items.stop(corner.stop)
             });
             conv.ask(responses.i18next.t('stop.pickOne'))
-            conv.ask(new List({
+            return conv.ask(new List({
                 title: responses.i18next.t('stops'),
                 items
             }));
         }
     } catch (error) {
         console.error(error)
-        conv.ask(responses.negatives.generalError())
+        return conv.ask(responses.negatives.generalError())
     }
 })
 
@@ -88,20 +95,29 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
     // Remove corner-followup context in order for dialogflow to match followups to 'stop' intents
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
     
-    // const busDoc = await database.getBusDocument(db, bus)
-    // const data = busDoc.data()
-
     try {
         const doc = await database.getBusStopDocument(db, bus, stop)
         if (doc.exists) {
+            // Get bus document
+            const busDoc = await database.getBusDocument(db, bus)
+            const busData = busDoc.data() as Bus
+            // Get stop data
+            const stopData = doc.data() as Stop
             // request
-            conv.ask(`La línea ${bus} llega a la parada ${stop} en 5 minutos`)
+            const corner = new Corner(busData, stopData)
+            const arrival = await SingleBusArrivalTime.get(busData, stopData.number)
+            if (arrival === 'NO_ARRIVALS') {
+                return conv.ask(responses.arrivals.noneFound(corner))
+            } else {
+                conv.ask(responses.suggestions.buses(stopData.otherBuses, 2))
+                return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
+            }
         } else {
-            conv.ask(responses.negatives.invalidStop(bus, stop))
+            return conv.ask(responses.negatives.invalidStop(bus, stop))
         }
     } catch (error) {
         console.error(error)
-        conv.ask(responses.negatives.generalError())
+        return conv.ask(responses.negatives.generalError())
     }
 })
 
@@ -169,7 +185,7 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
         if (doc.exists) {
             const data = doc.data() as Stop
             conv.ask(...responses.rich.stop_card(data, payload && payload === 'ONE_STOP_FOUND'))
-            return conv.ask(responses.suggestions.buses(data.buses, 3))
+            return conv.ask(responses.suggestions.buses(data.buses, 5))
         } else {
             return conv.ask(responses.negatives.nonExistentStop(stop))
         }

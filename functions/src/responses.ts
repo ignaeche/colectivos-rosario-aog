@@ -77,6 +77,14 @@ export const items = {
 }
 
 export const arrivals = {
+    'noneFound': (corner: Corner) => {
+        return createSimpleResponse('arrivals.noneFound', {
+            bus: corner.bus.name,
+            street: corner.stop.street.desc,
+            intersection: corner.stop.intersection.desc,
+            stop: corner.stop.number
+        })
+    },
     'foundTimes': (corner: Corner) => {
         return createSimpleResponse('arrivals.foundTimes', {
             bus: corner.bus.name,

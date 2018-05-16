@@ -33,6 +33,7 @@
 
     "arrivals": {
         "foundTimes": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
+        "noneFound": "Me temo que no encontré horarios para la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
         "sentences": {
             "firstBus": {
                 "speech": "<s>La línea {{flag}} {{arrivesIn}}.</s>",
