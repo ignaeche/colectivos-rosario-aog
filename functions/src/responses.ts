@@ -39,6 +39,9 @@ export const negatives = {
     'noStopsNearYou': () => {
         return createSimpleResponse('stop.noneNearYou', undefined)
     },
+    'noStopsNearYouForBus': (bus: string) => {
+        return createSimpleResponse('stop.noneNearYouForBus', { bus })
+    },
     'generalError': () => {
         return createSimpleResponse('errorOccurred', undefined)
     },

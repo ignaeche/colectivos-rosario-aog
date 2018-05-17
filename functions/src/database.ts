@@ -79,3 +79,17 @@ export async function findValidCorners(db: FirebaseFirestore.Firestore, bus: Bus
 
     return validCorners
 }
+
+export async function findFirstStop(db: FirebaseFirestore.Firestore, bus: string, stops: Array<string>): Promise<Stop | "NO_STOPS"> {
+    if (stops.length === 0) {
+        return 'NO_STOPS'
+    }
+
+    const stop = stops.shift()
+    const doc = await getBusStopDocument(db, bus, stop)
+    if (doc.exists) {
+        return doc.data() as Stop
+    } else {
+        return findFirstStop(db, bus, stops)
+    }
+}

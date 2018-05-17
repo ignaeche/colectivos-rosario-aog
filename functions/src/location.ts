@@ -7,7 +7,7 @@ const GeoFire = require('geofire')
 const QUERY_LIMIT = 6
 const RADIUS_LIMIT = 1
 
-function getClosestStopsCallback(db: admin.database.Database, coordinates: GoogleTypeLatLng, callback) {
+function getClosestStopsCallback(db: admin.database.Database, coordinates: GoogleTypeLatLng, limit: number, callback) {
     const sort = (array: Array<any>) => array.sort((a, b) => a.distanceInMeters - b.distanceInMeters)
     try {
         const locationRef = db.ref('stops_location')
@@ -20,19 +20,19 @@ function getClosestStopsCallback(db: admin.database.Database, coordinates: Googl
         const results: Array<StopLocation> = []
 
         geoQuery.on('ready', _ => {
-            if (limitCounter < QUERY_LIMIT && geoQuery.radius() <= RADIUS_LIMIT) {
+            if (limitCounter < limit && geoQuery.radius() <= RADIUS_LIMIT) {
                 geoQuery.updateCriteria({
                     radius: geoQuery.radius() + 0.1
                 })
             } else {
                 geoQuery.cancel()
-                callback(null, sort(results).slice(0, QUERY_LIMIT))
+                callback(null, sort(results).slice(0, limit))
             }
         })
         geoQuery.on('key_entered', (key, location, distance) => {
             results.push({ stop: key, location, distanceInMeters: Math.floor(distance * 1000) })
             limitCounter++
-            // if (limitCounter >= QUERY_LIMIT) {
+            // if (limitCounter >= limit) {
             //     geoQuery.cancel()
             //     callback(null, sort(results))
             // }
@@ -43,9 +43,9 @@ function getClosestStopsCallback(db: admin.database.Database, coordinates: Googl
 }
 
 // export const getClosestStops = util.promisify<admin.database.Database, GoogleTypeLatLng, Array<any>>(getClosestStopsCallback)
-export const getClosestStops = (db, coords) => {
+export const getClosestStops = (db, coords, limit = QUERY_LIMIT) => {
     return new Promise<Array<StopLocation>>((resolve, reject) => {
-        getClosestStopsCallback(db, coords, (err, data) => {
+        getClosestStopsCallback(db, coords, limit, (err, data) => {
             if (data !== null) resolve(data)
             else reject(err)
         });

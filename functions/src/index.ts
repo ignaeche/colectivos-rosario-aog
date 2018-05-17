@@ -5,7 +5,7 @@ import { dialogflow, List, Permission, DialogflowConversation, Contexts } from '
 import * as database from './database';
 import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
-import { Intents, IntentGroups, AppContexts, Parameters, Events, Payload } from './dialogflow-constants';
+import { Intents, IntentGroups, AppContexts, Parameters, Events, Payload, Actions } from './dialogflow-constants';
 import { getClosestStops } from './location';
 import { SingleBusArrivalTime } from './arrivals';
 
@@ -96,7 +96,7 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
     // If this intent is invoked then a stop-number-followup context is outputted
     // Remove corner-followup context in order for dialogflow to match followups to 'stop' intents
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
-    
+
     try {
         const doc = await database.getBusStopDocument(db, bus, stop)
         if (doc.exists) {
@@ -154,9 +154,35 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
     }
 }
 
+const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>) => {
+    try {
+        // @ts-ignore: Property does not exist
+        const { coordinates } = conv.data
+        const bus = (conv.contexts.get(AppContexts.BUS_FOLLOWUP).parameters[Parameters.BUS_LINE] || conv.parameters[Parameters.BUS_LINE]) as string
+        const locations: Array<StopLocation> = await getClosestStops(rtdb, coordinates, 20)
+
+        const stop = await database.findFirstStop(db, bus, locations.map(s => s.stop))
+
+        if (stop === 'NO_STOPS') {
+            return conv.ask(responses.negatives.noStopsNearYouForBus(bus))
+        } else {
+            const followupParams = {
+                [Parameters.BUS_LINE]: bus,
+                [Parameters.STOP_NUMBER]: stop.number
+            }
+            return conv.followup(Events.STOP_SEARCH_EVENT, followupParams)
+        }
+    } catch (error) {
+        console.error(error)
+        return conv.ask(responses.negatives.generalError())
+    }
+}
+
 app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
     // @ts-ignore: Property does not exist
     if (!conv.data.coordinates) {
+        // @ts-ignore: Property does not exist
+        conv.data.locationAction = conv.action
         return conv.ask(new Permission({
             context: responses.i18next.t('location.permissionReason'),
             permissions: 'DEVICE_PRECISE_LOCATION'
@@ -165,12 +191,35 @@ app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
     return showStopLocationList(conv)
 })
 
+app.intent(IntentGroups.CLOSEST_STOP_INTENTS, (conv, params) => {
+    const bus = params[Parameters.BUS_LINE]
+    // @ts-ignore: Property does not exist
+    if (!conv.data.coordinates) {
+        // @ts-ignore: Property does not exist
+        conv.data.locationAction = conv.action
+        return conv.ask(new Permission({
+            context: responses.i18next.t('location.searchPermissionReason', { bus }),
+            permissions: 'DEVICE_PRECISE_LOCATION'
+        }))
+    }
+    return searchClosestStop(conv)
+})
+
 app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
     if (granted) {
         const { coordinates } = conv.device.location
         // @ts-ignore: Property does not exit
+        const action = conv.data.locationAction
+        // @ts-ignore: Property does not exit
         conv.data.coordinates = coordinates
-        return showStopLocationList(conv)
+        switch (action) {
+            case Actions.STOPS_CLOSEST:
+                return showStopLocationList(conv)
+            case Actions.BUS_STOP_CLOSEST:
+                return searchClosestStop(conv)
+            default:
+                return conv.ask(responses.negatives.generalError())
+        }
     } else {
         return conv.ask(responses.negatives.locationNotGranted())
     }

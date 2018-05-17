@@ -1,12 +1,14 @@
 export const Intents = {
     CUANDO_LLEGA_CORNER_INTENT: 'cuando_llega_corner_intent',
     CUANDO_LLEGA_STOP_INTENT: 'cuando_llega_stop_intent',
+    CUANDO_LLEGA_CLOSEST_STOP_INTENT: 'cuando_llega_closest_stop_intent',
     CLOSEST_STOPS_INTENT: 'closest_stops_intent',
     STOP_INFORMATION_INTENT: 'stop_information_intent',
     HANDLE_PERMISSION_INTENT: 'handle_permission_intent',
     // with bus-followup context
     BUS_CORNER_INTENT: 'bus_corner_intent',
     BUS_STOP_INTENT: 'bus_stop_intent',
+    BUS_CLOSEST_STOP_INTENT: 'bus_closest_stop_intent',
     // with corner-followup context
     CORNER_OTHER_BUS_INTENT: 'corner_other_bus_intent',
     // with stop-number-followup context
@@ -27,6 +29,10 @@ export const IntentGroups = {
         Intents.STOP_OTHER_BUS_INTENT,
         Intents.STOP_SEARCH_INTENT
     ],
+    CLOSEST_STOP_INTENTS: [
+        Intents.CUANDO_LLEGA_CLOSEST_STOP_INTENT,
+        Intents.BUS_CLOSEST_STOP_INTENT
+    ],
     CORNER_INTENTS: [
         Intents.CUANDO_LLEGA_CORNER_INTENT,
         Intents.BUS_CORNER_INTENT,
@@ -37,6 +43,11 @@ export const IntentGroups = {
         Intents.STOP_INFORMATION_TRIGGER_INTENT,
         Intents.STOP_INFORMATION_FOLLOWUP_INTENT
     ]
+}
+
+export const Actions = {
+    STOPS_CLOSEST: 'action.stops.closest',
+    BUS_STOP_CLOSEST: 'action.bus.stop.closest'
 }
 
 export const Events = {

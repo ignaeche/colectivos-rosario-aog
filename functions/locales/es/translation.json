@@ -4,7 +4,8 @@
         "invalid": "Me temo que la parada {{stop}} no es válida para la línea {{bus}}",
         "noneFoundOnCorner": "No encontré ninguna parada en la esquina de {{street}} y {{intersection}} para la línea {{bus}}",
         "nonExistent": "Me temo que la parada {{stop}} no existe",
-        "noneNearYou": "No encontré ninguna parada cerca tuyo.",
+        "noneNearYou": "No encontré ninguna parada cerca tuyo",
+        "noneNearYouForBus": "No encontré ninguna parada cerca tuyo para la línea {{bus}}",
         "pickOne": "Escoja una parada",
         "foundThese": "Encontré estas paradas",
         "onlyOneNearYou": "Solo encontré esta parada cerca tuyo",
@@ -68,6 +69,7 @@
 
     "location": {
         "permissionReason": "Para mostrar las paradas más cercanas",
+        "searchPermissionReason": "Para buscar los horarios del {{bus}} en la parada más cercana",
         "couldntAccess": "No pude acceder a tu ubicación"
     },
 
