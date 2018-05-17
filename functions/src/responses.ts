@@ -195,8 +195,9 @@ export const suggestions = {
     'closestStop': () => {
         return i18next.t('suggestions.closestStop')
     },
-    'stop': (stop: Stop) => {
+    'stop': (stop: Stop, stopInContext: boolean = true) => {
         return new Suggestions(
+            stopInContext ? i18next.t('suggestions.infoThis') : i18next.t('suggestions.info', { stop: stop.number }),
             suggestions.closestStop(),
             suggestions.stopsList(stop.nearbyStops, 3),
             suggestions.busesList(stop.buses, 3)

@@ -56,7 +56,7 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             const arrival = await SingleBusArrivalTime.get(corner.bus, corner.stop.number)
 
             // Suggest other stops and buses from stop data
-            conv.ask(responses.suggestions.stop(corner.stop))
+            conv.ask(responses.suggestions.stop(corner.stop, false))
             // Return response
             if (arrival === 'NO_ARRIVALS') {
                 return conv.ask(responses.arrivals.noneFound(corner))

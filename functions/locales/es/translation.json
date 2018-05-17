@@ -75,7 +75,9 @@
     "suggestions": {
         "otherBus": "¿Y la {{bus}}?",
         "otherStop": "¿Parada {{stop}}?",
-        "closestStop": "¿Parada más cercana?"
+        "closestStop": "¿Parada más cercana?",
+        "info": "Info de la parada {{stop}}",
+        "infoThis": "Info de esta parada"
     },
 
     "options": {
