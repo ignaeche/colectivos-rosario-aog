@@ -1,10 +1,8 @@
-import i18next from './i18next';
+import * as i18next from 'i18next';
 import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button, OptionItem, SimpleResponseOptions } from 'actions-on-google';
 import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop, Street } from './models';
 import { randomPop, takeRandom } from './util';
 import { getStopLocationImage, getStopMapsLink } from './maps';
-
-export { default as i18next } from './i18next';
 
 function createSimpleResponse(key: string, data) {
     return new SimpleResponse(i18next.t(key, data))

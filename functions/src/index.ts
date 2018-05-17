@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { dialogflow, List, Permission, DialogflowConversation, Contexts, Suggestions } from 'actions-on-google';
 
+import i18next from './i18next'
 import * as database from './database';
 import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
@@ -16,7 +17,7 @@ const rtdb = admin.database()
 const app = dialogflow()
 
 app.middleware(conv => {
-    responses.i18next.changeLanguage(conv.user.locale)
+    i18next.changeLanguage(conv.user.locale)
     console.log(`Intent ${conv.intent} matched with params ${JSON.stringify(conv.parameters)}`)
 })
 
@@ -69,9 +70,9 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             validCorners.forEach(corner => {
                 items[`STOP_${corner.stop.number}`] = responses.items.stop(corner.stop)
             });
-            conv.ask(responses.i18next.t('stop.pickOne'))
+            conv.ask(i18next.t('stop.pickOne'))
             return conv.ask(new List({
-                title: responses.i18next.t('stops'),
+                title: i18next.t('stops'),
                 items
             }));
         }
@@ -173,9 +174,9 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
             items[`STOPINFO_${stop.number}`] = responses.items.stopDistanceAway(stop, distance)
         })
-        conv.ask(responses.i18next.t('stop.foundThese'))
+        conv.ask(i18next.t('stop.foundThese'))
         return conv.ask(new List({
-            title: responses.i18next.t('stops'),
+            title: i18next.t('stops'),
             items
         }))
     } catch (error) {
@@ -220,7 +221,7 @@ app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
         // @ts-ignore: Property does not exist
         conv.data.locationAction = conv.action
         return conv.ask(new Permission({
-            context: responses.i18next.t('location.permissionReason'),
+            context: i18next.t('location.permissionReason'),
             permissions: 'DEVICE_PRECISE_LOCATION'
         }))
     }
@@ -235,7 +236,7 @@ app.intent(IntentGroups.CLOSEST_STOP_INTENTS, (conv, params) => {
         // @ts-ignore: Property does not exist
         conv.data.locationAction = conv.action
         return conv.ask(new Permission({
-            context: responses.i18next.t('location.searchPermissionReason', { bus }),
+            context: i18next.t('location.searchPermissionReason', { bus }),
             permissions: 'DEVICE_PRECISE_LOCATION'
         }))
     }
