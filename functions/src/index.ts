@@ -246,4 +246,14 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
     }
 })
 
+app.intent(IntentGroups.WELCOME_INTENTS, conv => {
+    const { action } = conv
+    conv.ask(responses.welcome.suggestions())
+    if (action === Actions.WELCOME_UNKNOWN) {
+        return conv.ask(responses.welcome.welcome_fallback())
+    } else {
+        return conv.ask(responses.welcome.welcome())
+    }
+})
+
 export const cuandoLlegaFulfillment = functions.https.onRequest(app)

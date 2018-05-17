@@ -1,4 +1,8 @@
 export const Intents = {
+    // welcome intent
+    WELCOME_INTENT: 'welcome_intent',
+    WELCOME_DEEP_LINK_FALLBACK_INTENT: 'welcome_deep_link_fallback_intent',
+    // main intents
     CUANDO_LLEGA_CORNER_INTENT: 'cuando_llega_corner_intent',
     CUANDO_LLEGA_STOP_INTENT: 'cuando_llega_stop_intent',
     CUANDO_LLEGA_CLOSEST_STOP_INTENT: 'cuando_llega_closest_stop_intent',
@@ -23,6 +27,10 @@ export const Intents = {
 }
 
 export const IntentGroups = {
+    WELCOME_INTENTS: [
+        Intents.WELCOME_INTENT,
+        Intents.WELCOME_DEEP_LINK_FALLBACK_INTENT
+    ],
     STOP_INTENTS: [
         Intents.CUANDO_LLEGA_STOP_INTENT,
         Intents.BUS_STOP_INTENT,
@@ -46,6 +54,8 @@ export const IntentGroups = {
 }
 
 export const Actions = {
+    WELCOME: 'input.welcome',
+    WELCOME_UNKNOWN: 'input.welcome.unknown',
     STOPS_CLOSEST: 'action.stops.closest',
     BUS_STOP_CLOSEST: 'action.bus.stop.closest'
 }

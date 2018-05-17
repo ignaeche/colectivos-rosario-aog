@@ -1,4 +1,19 @@
 {
+    "welcome": {
+        "greeting": ["¡Bienvenido a Colectivos Rosario!"],
+        "question": ["¿Qué puedo hacer por ti?", "¿Qué desea consultar?"],
+        "unknownSpeech": ["No estoy seguro de lo que dijiste.", "No entendí eso."],
+        "suggestAction": [
+            "Puedes preguntarme cuándo llega una línea o te puedo mostrar las paradas más cercanas.",
+            "Pero te puedo mostrar las paradas más cercanas o el horario de llegada de una línea."
+        ],
+        "suggestionsChips": [
+            "¿Cuándo llega?",
+            "¿Cuándo llega cerca mío?",
+            "Paradas más cercanas",
+            "Info sobre una parada"
+        ]
+    },
     "stop": {
         "number": "Parada {{stop}}",
         "invalid": "Me temo que la parada {{stop}} no es válida para la línea {{bus}}",

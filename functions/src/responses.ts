@@ -26,6 +26,37 @@ const stopMapImage = (stop: Stop, size?) => {
     })
 }
 
+function makeRandomResponse(list: Array<Array<string>>) {
+    const response = list.map(l => randomPop(l))
+    const speech = response.map(s => wrapTag(s, 's')).join('')
+    return {
+        speech: wrapTag(speech, 'speak'),
+        text: response.join(' ')
+    }
+}
+
+export const welcome = {
+    'welcome': () => {
+        const response = [
+            i18next.t('welcome.greeting'),
+            i18next.t('welcome.question')
+        ]
+        return new SimpleResponse(makeRandomResponse(response))
+    },
+    'welcome_fallback': () => {
+        const response = [
+            i18next.t('welcome.greeting'),
+            i18next.t('welcome.unknownSpeech'),
+            i18next.t('welcome.suggestAction'),
+            i18next.t('welcome.question')
+        ]
+        return new SimpleResponse(makeRandomResponse(response))
+    },
+    'suggestions': () => {
+        return new Suggestions(i18next.t('welcome.suggestionsChips'))
+    }
+}
+
 export const negatives = {
     'noStopsFound': (bus: string, street: string, intersection: string) => {
         return createSimpleResponse('stop.noneFoundOnCorner', { bus, street, intersection })

@@ -1,4 +1,19 @@
 {
+    "welcome": {
+        "greeting": ["Hi! Welcome to Rosario Buses!", "Hello! Welcome to Rosario Buses"],
+        "question": ["What can I do for you?", "What would you like to know?"],
+        "unknownSpeech": ["I'm not sure if I can do what you asked.", "I don't know what you meant by that."],
+        "suggestAction": [
+            "But I can show you the closest bus stops or tell you when a bus line is arriving.",
+            "However, I can find the stops closest to your location or tell you when a bus is arriving."
+        ],
+        "suggestionsChips": [
+            "When does it arrive?",
+            "Arriving near me?",
+            "Stops near me",
+            "Info about a stop"
+        ]
+    },
     "stop": {
         "number": "Stop {{stop}}",
         "invalid": "I'm afraid stop {{stop}} is not a valid stop for bus {{bus}}",
