@@ -256,4 +256,14 @@ app.intent(IntentGroups.WELCOME_INTENTS, conv => {
     }
 })
 
+app.fallback(conv => {
+    console.error(`Fallback handler called. ${conv.intent} does not have a handler.`)
+    return conv.ask(responses.negatives.generalError())
+})
+
+app.catch(conv => {
+    console.error(`Catch handler called. ${conv.intent} has an uncaught error.`)
+    return conv.ask(responses.negatives.generalError())
+})
+
 export const cuandoLlegaFulfillment = functions.https.onRequest(app)
