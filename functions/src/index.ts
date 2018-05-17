@@ -30,30 +30,41 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
     conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
 
     try {
-        const document = await database.getBusDocument(db, bus)
-        const busData = document.data() as Bus
+        // Get bus document
+        const busDoc = await database.getBusDocument(db, bus)
+        const busData = busDoc.data() as Bus
+
+        // Find corners where street name and intersection name match
         const validCorners: Array<Corner> = await database.findValidCorners(db, busData, street, intersection)
 
         const size = validCorners.length
         if (size === 0) {
+            // No stops found, suggest other stops for this bus
             conv.ask(responses.suggestions.bus(busData))
             return conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
         } else if (size === 1) {
+            // Only one stop found, 
             const corner = validCorners[0]
+
             // Get bus stop document
             const stopDoc = await database.getBusStopDocument(db, bus, corner.stop.number)
             const stopData = stopDoc.data() as Stop
+            // Replace stop data with data from the stop document found in subcollection /buses/{bus}/stops/{stop}
             corner.stop = stopData
-            // Probable solution; may make request here in order to keep corner context
-            // conv.followup(Events.STOP_SEARCH_EVENT, { [Parameters.BUS_LINE]: bus, [Parameters.STOP_NUMBER]: corner.stop.number })
+
+            // Request
             const arrival = await SingleBusArrivalTime.get(corner.bus, corner.stop.number)
+
+            // Suggest other stops and buses from stop data
             conv.ask(responses.suggestions.stop(corner.stop))
+            // Return response
             if (arrival === 'NO_ARRIVALS') {
                 return conv.ask(responses.arrivals.noneFound(corner))
             } else {
                 return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
         } else {
+            // More than 2 stops found, construct list for user
             const items = {}
             validCorners.forEach(corner => {
                 items[`STOP_${corner.stop.number}`] = responses.items.stop(corner.stop)
@@ -74,10 +85,11 @@ app.intent(Intents.STOP_LIST_SELECTION_INTENT, (conv, params, option) => {
     if (!option) {
         return conv.ask(responses.negatives.noOption())
     }
+    // Split key
     const stop = option.toString().split('_')
     switch (stop[0]) {
         case "STOP":
-            // If bus-followup context is not present, present stop information
+            // If bus-followup context is not present, present stop information, otherwise followup with search
             const context = conv.contexts.get(AppContexts.BUS_FOLLOWUP)
             if (context !== undefined) {
                 const followupParams = {
@@ -104,16 +116,20 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
 
     try {
-        const doc = await database.getBusStopDocument(db, bus, stop)
         // Get bus document
         const busDoc = await database.getBusDocument(db, bus)
         const busData = busDoc.data() as Bus
+
+        // Get stop document; if it exists do search
+        const doc = await database.getBusStopDocument(db, bus, stop)
         if (doc.exists) {
             // Get stop data
             const stopData = doc.data() as Stop
-            // request
-            const corner = new Corner(busData, stopData)
+            // Request
             const arrival = await SingleBusArrivalTime.get(busData, stopData.number)
+
+            // Make corner out of bus and stop for responses functions
+            const corner = new Corner(busData, stopData)
             conv.ask(responses.suggestions.stop(corner.stop))
             if (arrival === 'NO_ARRIVALS') {
                 return conv.ask(responses.arrivals.noneFound(corner))
@@ -121,6 +137,7 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
                 return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
         } else {
+            // Invalid stop, suggest other stops from bus
             conv.ask(responses.suggestions.bus(busData))
             return conv.ask(responses.negatives.invalidStop(bus, stop))
         }
@@ -134,18 +151,23 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
     try {
         // @ts-ignore: Property does not exist
         const { coordinates } = conv.data
+        // Get stop locations in range of user location
         const locations: Array<StopLocation> = await getClosestStops(rtdb, coordinates)
 
         if (locations.length === 0) {
+            // None found, suggest other actions
             conv.ask(responses.welcome.suggestions())
             return conv.ask(responses.negatives.noStopsNearYou())
         }
         if (locations.length === 1) {
+            // One found, present stop information with message (payload flag)
             return conv.followup(Events.STOP_INFORMATION_EVENT, { [Parameters.STOP_NUMBER]: locations.pop().stop, [Parameters.PAYLOAD]: 'ONE_STOP_FOUND' })
         }
 
+        // More than 2 found, get stops information
         const stops: Array<Stop> = await database.getStops(db, locations.map(o => o.stop))
 
+        // Make list and send it to the user
         const items = {}
         stops.forEach(stop => {
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
@@ -166,15 +188,20 @@ const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>)
     try {
         // @ts-ignore: Property does not exist
         const { coordinates } = conv.data
+        // Get bus from context (means call from handle_permission) or parameters (call from regular intent)
         const bus = (conv.contexts.get(AppContexts.BUS_FOLLOWUP).parameters[Parameters.BUS_LINE] || conv.parameters[Parameters.BUS_LINE]) as string
+        // Get up to 20 stops in a 1km circle
         const locations: Array<StopLocation> = await getClosestStops(rtdb, coordinates, 20)
 
+        // Find the information for the closest stop, locations is ordered by distance
         const stop = await database.findFirstStop(db, bus, locations.map(s => s.stop))
 
         if (stop === 'NO_STOPS') {
+            // No stops found, suggest other actions
             conv.ask(responses.welcome.suggestions())
             return conv.ask(responses.negatives.noStopsNearYouForBus(bus))
         } else {
+            // One found, followup with arrival time search
             const followupParams = {
                 [Parameters.BUS_LINE]: bus,
                 [Parameters.STOP_NUMBER]: stop.number
@@ -197,6 +224,7 @@ app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
             permissions: 'DEVICE_PRECISE_LOCATION'
         }))
     }
+    // If location available, show stop list
     return showStopLocationList(conv)
 })
 
@@ -211,11 +239,13 @@ app.intent(IntentGroups.CLOSEST_STOP_INTENTS, (conv, params) => {
             permissions: 'DEVICE_PRECISE_LOCATION'
         }))
     }
+    // If location available, search for closest stop
     return searchClosestStop(conv)
 })
 
 app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
     if (granted) {
+        // Location was granted, answer according to action from requesting intent (saved in conv.data)
         const { coordinates } = conv.device.location
         // @ts-ignore: Property does not exit
         const action = conv.data.locationAction
@@ -230,6 +260,7 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
                 return conv.ask(responses.negatives.generalError())
         }
     } else {
+        // Location not granted, suggest other actions to the user
         conv.ask(responses.welcome.suggestions())
         return conv.ask(responses.negatives.locationNotGranted())
     }
@@ -243,6 +274,7 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
 
     try {
         const doc = await database.getStopDocument(db, stop)
+        // If stop exists, show info card; otherwise suggest other actions
         if (doc.exists) {
             const data = doc.data() as Stop
             conv.ask(...responses.rich.stop_card(data, payload && payload === 'ONE_STOP_FOUND'))
@@ -261,6 +293,7 @@ app.intent(IntentGroups.WELCOME_INTENTS, conv => {
     const { action } = conv
     conv.ask(responses.welcome.suggestions())
     if (action === Actions.WELCOME_UNKNOWN) {
+        // Deep invocation failed, show fallback message
         return conv.ask(responses.welcome.welcome_fallback())
     } else {
         return conv.ask(responses.welcome.welcome())
