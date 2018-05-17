@@ -11,7 +11,7 @@
             "When does it arrive?",
             "Arriving near me?",
             "Stops near me",
-            "Info about a stop"
+            "Info on a stop"
         ]
     },
     "stop": {
@@ -73,7 +73,9 @@
     },
 
     "suggestions": {
-        "otherBus": "Bus {{bus}}?"
+        "otherBus": "Bus {{bus}}?",
+        "otherStop": "Stop {{stop}}?",
+        "closestStop": "Closest stop?"
     },
 
     "options": {

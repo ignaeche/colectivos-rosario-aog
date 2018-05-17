@@ -184,9 +184,29 @@ export const rich = {
 }
 
 export const suggestions = {
-    'buses': (buses: Array<string>, howMany: number) => {
+    'busesList': (buses: Array<string>, howMany: number) => {
         const list = takeRandom(buses, howMany)
-        return new Suggestions(list.sort().map(bus => i18next.t('suggestions.otherBus', { bus })))
+        return list.sort().map(bus => i18next.t('suggestions.otherBus', { bus }))
+    },
+    'stopsList': (stops: Array<string>, howMany: number) => {
+        const list = takeRandom(stops, howMany)
+        return list.sort().map(stop => i18next.t('suggestions.otherStop', { stop }))
+    },
+    'closestStop': () => {
+        return i18next.t('suggestions.closestStop')
+    },
+    'stop': (stop: Stop) => {
+        return new Suggestions(
+            suggestions.closestStop(),
+            suggestions.stopsList(stop.nearbyStops, 3),
+            suggestions.busesList(stop.buses, 3)
+        )
+    },
+    'bus': (bus: Bus) => {
+        return new Suggestions(
+            suggestions.closestStop(),
+            suggestions.stopsList(bus.stopSelection, 3),
+        )
     }
 }
 
