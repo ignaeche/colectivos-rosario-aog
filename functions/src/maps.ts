@@ -4,11 +4,21 @@ import * as crypto from 'crypto'
 
 const STATIC_MAPS_URL = 'https://maps.googleapis.com/maps/api/staticmap'
 const STATIC_MAPS_SIZE = {
+    BIG_SIZE: '640x320',
     CARD_SIZE: '544x272',
     LIST_SIZE: '144x144'
 }
 
-type ImageSize = 'CARD_SIZE' | 'LIST_SIZE'
+const retroStyle = [
+    "element:geometry|color:0xebe3cd",
+    "feature:poi|element:geometry|color:0xdfd2ae",
+    "feature:poi.park|element:geometry.fill|color:0xa5b076",
+    "feature:road|element:geometry|color:0xf5f1e6",
+    "feature:road.arterial|element:geometry|color:0xfdfcf8",
+    "feature:water|element:geometry.fill|color:0xb9d3c2"
+]
+
+type ImageSize = 'CARD_SIZE' | 'LIST_SIZE' | 'BIG_SIZE'
 
 export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, language: string, size: ImageSize = 'CARD_SIZE') {
     const uri = url.parse(STATIC_MAPS_URL, true)
@@ -23,11 +33,11 @@ export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, la
         language: language,
         markers: coords
     }
-    if (size === 'CARD_SIZE') {
-        uri.query.style = 'feature:poi|element:labels.text|visibility:off'
+    if (size === 'CARD_SIZE' || size === 'BIG_SIZE') {
+        uri.query.style = ['feature:poi|element:labels.text|visibility:off'].concat(retroStyle)
     }
     if (size === 'LIST_SIZE') {
-        uri.query.style = 'feature:poi|element:labels|visibility:off'
+        uri.query.style = ['feature:poi|element:labels|visibility:off'].concat(retroStyle)
     }
     return sign(url.format(uri), functions.config().maps.secret)
 }
