@@ -39,6 +39,12 @@
 
     "corner": "{{street}} y {{intersection}}",
 
+    "length": {
+        "invalid": {
+            "streets": "La calle y la intersección deben tener {{length}} o más letras"
+        }
+    },
+
     "distance": {
         "awayCorner": "A $t(distance.meters, {'count': {{distance}} }) en la esquina de {{street}} y {{intersection}}",
         "meters": "{{count}} metro",
@@ -109,5 +115,9 @@
 
     "hereYouGo": "Aquí tienes",
 
-    "anythingElse": "¿Desea consultar algo más?"
+    "anythingElse": [
+        "¿Desea consultar algo más?",
+        "¿Que más desea consultar?",
+        "¿Quiere preguntar algo más?"
+    ]
 }

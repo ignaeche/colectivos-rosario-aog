@@ -39,6 +39,12 @@
 
     "corner": "{{street}} and {{intersection}}",
 
+    "length": {
+        "invalid": {
+            "streets": "The street and the intersection must have {{length}} or more letters"
+        }
+    },
+
     "distance": {
         "awayCorner": "$t(distance.meters, {'count': {{distance}} }) away on the corner of {{street}} and {{intersection}}",
         "meters": "{{count}} meter",
@@ -110,5 +116,9 @@
 
     "hereYouGo": "Here you go",
 
-    "anythingElse": "Is there anything else you would like to ask?"
+    "anythingElse": [
+        "Is there anything else you would like to ask?",
+        "Would you like to ask something else?",
+        "What else would you like to ask?"
+    ]
 }

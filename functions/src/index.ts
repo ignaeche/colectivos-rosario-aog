@@ -10,6 +10,8 @@ import { Intents, IntentGroups, AppContexts, Parameters, Events, Payload, Action
 import { getClosestStops, isInCity } from './location';
 import { SingleBusArrivalTime } from './arrivals';
 
+const STREET_MIN_LENGTH = 4
+
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
 const rtdb = admin.database()
@@ -29,6 +31,11 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
     // If this intent is invoked then a corner-followup context is outputted
     // Remove stop-number-followup context in order for dialogflow to match followups to 'corner' intents
     conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
+
+    if (street.length < STREET_MIN_LENGTH || intersection.length < STREET_MIN_LENGTH) {
+        conv.ask(responses.negatives.invalidLength(STREET_MIN_LENGTH))
+        return conv.ask(responses.prompts.anythingElse())
+    }
 
     try {
         // Get bus document

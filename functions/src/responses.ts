@@ -90,6 +90,9 @@ export const negatives = {
     },
     'noOption': () => {
         return createSimpleResponse('options.none', undefined)
+    },
+    'invalidLength': (length: number) => {
+        return createSimpleResponse('length.invalid.streets', { length })
     }
 }
 
@@ -219,7 +222,7 @@ export const suggestions = {
 
 export const prompts = {
     'anythingElse': () => {
-        return createSimpleResponse('anythingElse', undefined)
+        return new SimpleResponse(makeRandomResponse([i18next.t('anythingElse')]))
     }
 }
 
