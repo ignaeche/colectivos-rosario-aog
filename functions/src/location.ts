@@ -51,3 +51,20 @@ export const getClosestStops = (db, coords, limit = QUERY_LIMIT) => {
         });
     })
 }
+
+const cityBox = {
+    min: {
+        latitude: -33.055451,
+        longitude: -60.875507
+    },
+    max: {
+        latitude: -32.823311,
+        longitude: -60.583285
+    }
+}
+
+export function isInCity(coordinates: GoogleTypeLatLng) {
+    const { latitude, longitude } = coordinates
+    return (latitude > cityBox.min.latitude && latitude < cityBox.max.latitude) &&
+        (longitude > cityBox.min.longitude && longitude < cityBox.max.longitude)
+}

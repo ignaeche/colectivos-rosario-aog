@@ -92,7 +92,8 @@
     "location": {
         "permissionReason": "To show the closest stops",
         "searchPermissionReason": "To search for arrival times for bus {{bus}} for the nearest stop",
-        "couldntAccess": "I couldn't access your location"
+        "couldntAccess": "I couldn't access your location",
+        "notInCity": "Since you are not in the city of Rosario or nearby towns, I won't be able to find any stops near you."
     },
 
     "joinArray": {

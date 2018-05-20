@@ -81,6 +81,9 @@ export const negatives = {
     'locationNotGranted': () => {
         return createSimpleResponse('location.couldntAccess', undefined)
     },
+    'notInCity': () => {
+        return createSimpleResponse('location.notInCity', undefined)
+    },
     'invalidOption': () => {
         return createSimpleResponse('options.invalid', undefined)
     },

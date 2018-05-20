@@ -7,7 +7,7 @@ import * as database from './database';
 import { Corner, Bus, Stop, StopLocation } from './models';
 import * as responses from './responses';
 import { Intents, IntentGroups, AppContexts, Parameters, Events, Payload, Actions } from './dialogflow-constants';
-import { getClosestStops } from './location';
+import { getClosestStops, isInCity } from './location';
 import { SingleBusArrivalTime } from './arrivals';
 
 admin.initializeApp(functions.config().firebase)
@@ -156,6 +156,10 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
     try {
         // @ts-ignore: Property does not exist
         const { coordinates } = conv.data
+        if (!isInCity(coordinates)) {
+            conv.ask(responses.negatives.notInCity())
+            return conv.ask(responses.prompts.anythingElse())
+        }
         // Get stop locations in range of user location
         const locations: Array<StopLocation> = await getClosestStops(rtdb, coordinates)
 
@@ -194,6 +198,10 @@ const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>)
     try {
         // @ts-ignore: Property does not exist
         const { coordinates } = conv.data
+        if (!isInCity(coordinates)) {
+            conv.ask(responses.negatives.notInCity())
+            return conv.ask(responses.prompts.anythingElse())
+        }
         // Get bus from context (means call from handle_permission) or parameters (call from regular intent)
         const bus = (conv.contexts.get(AppContexts.BUS_FOLLOWUP).parameters[Parameters.BUS_LINE] || conv.parameters[Parameters.BUS_LINE]) as string
         // Get up to 20 stops in a 1km circle

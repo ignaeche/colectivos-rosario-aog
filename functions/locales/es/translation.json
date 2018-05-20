@@ -92,7 +92,8 @@
     "location": {
         "permissionReason": "Para mostrar las paradas más cercanas",
         "searchPermissionReason": "Para buscar los horarios del {{bus}} en la parada más cercana",
-        "couldntAccess": "No pude acceder a tu ubicación"
+        "couldntAccess": "No pude acceder a tu ubicación",
+        "notInCity": "Como no estás en la ciudad de Rosario o alrededores, no voy a poder encontrar paradas cerca tuyo."
     },
 
     "joinArray": {
