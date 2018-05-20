@@ -2,6 +2,8 @@ export const Intents = {
     // welcome intent
     WELCOME_INTENT: 'welcome_intent',
     WELCOME_DEEP_LINK_FALLBACK_INTENT: 'welcome_deep_link_fallback_intent',
+    // confirmation intents
+    ANYTHING_ELSE_YES_INTENT: 'anything_else_yes_intent',
     // main intents
     CUANDO_LLEGA_CORNER_INTENT: 'cuando_llega_corner_intent',
     CUANDO_LLEGA_STOP_INTENT: 'cuando_llega_stop_intent',

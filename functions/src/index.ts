@@ -317,6 +317,11 @@ app.intent(IntentGroups.WELCOME_INTENTS, conv => {
     }
 })
 
+app.intent(Intents.ANYTHING_ELSE_YES_INTENT, conv => {
+    conv.ask(responses.welcome.suggestions())
+    return conv.ask(conv.incoming.get('string'))
+})
+
 app.fallback(conv => {
     console.error(`Fallback handler called. ${conv.intent} does not have a handler.`)
     return conv.close(responses.negatives.generalError())
