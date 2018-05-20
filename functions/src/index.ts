@@ -42,7 +42,8 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
         if (size === 0) {
             // No stops found, suggest other stops for this bus
             conv.ask(responses.suggestions.bus(busData))
-            return conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
+            conv.ask(responses.negatives.noStopsFound(bus, street, intersection))
+            return conv.ask(responses.prompts.anythingElse())
         } else if (size === 1) {
             // Only one stop found, 
             const corner = validCorners[0]
@@ -60,10 +61,11 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             conv.ask(responses.suggestions.stop(corner.stop, false))
             // Return response
             if (arrival === 'NO_ARRIVALS') {
-                return conv.ask(responses.arrivals.noneFound(corner))
+                conv.ask(responses.arrivals.noneFound(corner))
             } else {
-                return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
+                conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
+            return conv.ask(responses.prompts.anythingElse())
         } else {
             // More than 2 stops found, construct list for user
             const items = {}
@@ -78,7 +80,7 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
         }
     } catch (error) {
         console.error(error)
-        return conv.ask(responses.negatives.generalError())
+        return conv.close(responses.negatives.generalError())
     }
 })
 
@@ -133,18 +135,20 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
             const corner = new Corner(busData, stopData)
             conv.ask(responses.suggestions.stop(corner.stop))
             if (arrival === 'NO_ARRIVALS') {
-                return conv.ask(responses.arrivals.noneFound(corner))
+                conv.ask(responses.arrivals.noneFound(corner))
             } else {
-                return conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
+                conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
+            return conv.ask(responses.prompts.anythingElse())
         } else {
             // Invalid stop, suggest other stops from bus
             conv.ask(responses.suggestions.bus(busData))
-            return conv.ask(responses.negatives.invalidStop(bus, stop))
+            conv.ask(responses.negatives.invalidStop(bus, stop))
+            return conv.ask(responses.prompts.anythingElse())
         }
     } catch (error) {
         console.error(error)
-        return conv.ask(responses.negatives.generalError())
+        return conv.close(responses.negatives.generalError())
     }
 })
 
@@ -158,7 +162,8 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
         if (locations.length === 0) {
             // None found, suggest other actions
             conv.ask(responses.welcome.suggestions())
-            return conv.ask(responses.negatives.noStopsNearYou())
+            conv.ask(responses.negatives.noStopsNearYou())
+            return conv.ask(responses.prompts.anythingElse())
         }
         if (locations.length === 1) {
             // One found, present stop information with message (payload flag)
@@ -181,7 +186,7 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
         }))
     } catch (error) {
         console.error(error)
-        return conv.ask(responses.negatives.generalError())
+        return conv.close(responses.negatives.generalError())
     }
 }
 
@@ -200,7 +205,8 @@ const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>)
         if (stop === 'NO_STOPS') {
             // No stops found, suggest other actions
             conv.ask(responses.welcome.suggestions())
-            return conv.ask(responses.negatives.noStopsNearYouForBus(bus))
+            conv.ask(responses.negatives.noStopsNearYouForBus(bus))
+            return conv.ask(responses.prompts.anythingElse())
         } else {
             // One found, followup with arrival time search
             const followupParams = {
@@ -211,7 +217,7 @@ const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>)
         }
     } catch (error) {
         console.error(error)
-        return conv.ask(responses.negatives.generalError())
+        return conv.close(responses.negatives.generalError())
     }
 }
 
@@ -258,12 +264,13 @@ app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
             case Actions.BUS_STOP_CLOSEST:
                 return searchClosestStop(conv)
             default:
-                return conv.ask(responses.negatives.generalError())
+                return conv.close(responses.negatives.generalError())
         }
     } else {
         // Location not granted, suggest other actions to the user
         conv.ask(responses.welcome.suggestions())
-        return conv.ask(responses.negatives.locationNotGranted())
+        conv.ask(responses.negatives.locationNotGranted())
+        return conv.ask(responses.prompts.anythingElse())
     }
 })
 
@@ -279,14 +286,15 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
         if (doc.exists) {
             const data = doc.data() as Stop
             conv.ask(...responses.rich.stop_card(data, payload && payload === 'ONE_STOP_FOUND'))
-            return conv.ask(new Suggestions(responses.suggestions.busesList(data.buses, 5)))
+            conv.ask(new Suggestions(responses.suggestions.busesList(data.buses, 5)))
         } else {
             conv.ask(responses.welcome.suggestions())
-            return conv.ask(responses.negatives.nonExistentStop(stop))
+            conv.ask(responses.negatives.nonExistentStop(stop))
         }
+        return conv.ask(responses.prompts.anythingElse())
     } catch (error) {
         console.error(error)
-        return conv.ask(responses.negatives.generalError())
+        return conv.close(responses.negatives.generalError())
     }
 })
 
@@ -303,12 +311,12 @@ app.intent(IntentGroups.WELCOME_INTENTS, conv => {
 
 app.fallback(conv => {
     console.error(`Fallback handler called. ${conv.intent} does not have a handler.`)
-    return conv.ask(responses.negatives.generalError())
+    return conv.close(responses.negatives.generalError())
 })
 
 app.catch(conv => {
     console.error(`Catch handler called. ${conv.intent} has an uncaught error.`)
-    return conv.ask(responses.negatives.generalError())
+    return conv.close(responses.negatives.generalError())
 })
 
 export const cuandoLlegaFulfillment = functions.https.onRequest(app)

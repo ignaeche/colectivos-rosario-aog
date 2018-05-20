@@ -1,6 +1,6 @@
 {
     "welcome": {
-        "greeting": ["Hi! Welcome to Rosario Buses!", "Hello! Welcome to Rosario Buses"],
+        "greeting": ["Hi! Welcome to Rosario Buses!", "Hello! Welcome to Rosario Buses!"],
         "question": ["What can I do for you?", "What would you like to know?"],
         "unknownSpeech": ["I'm not sure if I can do what you asked.", "I don't know what you meant by that."],
         "suggestAction": [
@@ -13,6 +13,9 @@
             "Stops near me",
             "Info on a stop"
         ]
+    },
+    "goodbye": {
+        "message": ["Goodbye!", "Thank you!", "Talk later!"]
     },
     "stop": {
         "number": "Stop {{stop}}",
@@ -101,5 +104,7 @@
 
     "viewOnGoogleMaps": "View on Google Maps",
 
-    "hereYouGo": "Here you go"
+    "hereYouGo": "Here you go",
+
+    "anythingElse": "Is there anything else you would like to ask?"
 }

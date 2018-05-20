@@ -72,7 +72,11 @@ export const negatives = {
         return createSimpleResponse('stop.noneNearYouForBus', { bus })
     },
     'generalError': () => {
-        return createSimpleResponse('errorOccurred', undefined)
+        const response = [
+            i18next.t('errorOccurred'),
+            i18next.t('goodbye.message')
+        ]
+        return new SimpleResponse(makeRandomResponse(response))
     },
     'locationNotGranted': () => {
         return createSimpleResponse('location.couldntAccess', undefined)
@@ -206,6 +210,12 @@ export const suggestions = {
             suggestions.closestStop(),
             suggestions.stopsList(bus.stopSelection, 3),
         )
+    }
+}
+
+export const prompts = {
+    'anythingElse': () => {
+        return createSimpleResponse('anythingElse', undefined)
     }
 }
 

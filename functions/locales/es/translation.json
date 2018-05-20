@@ -14,6 +14,9 @@
             "Info sobre una parada"
         ]
     },
+    "goodbye": {
+        "message": ["¡Adiós!", "¡Chau!", "¡Hasta luego!", "¡Hablamos pronto!"]
+    },
     "stop": {
         "number": "Parada {{stop}}",
         "invalid": "Me temo que la parada {{stop}} no es válida para la línea {{bus}}",
@@ -101,5 +104,7 @@
 
     "viewOnGoogleMaps": "Ver en Google Maps",
 
-    "hereYouGo": "Aquí tienes"
+    "hereYouGo": "Aquí tienes",
+
+    "anythingElse": "¿Desea consultar algo más?"
 }
