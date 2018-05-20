@@ -60,14 +60,8 @@
         "foundTimes": "Encontré estos horarios de la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
         "noneFound": "Me temo que no encontré horarios para la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}",
         "sentences": {
-            "firstBus": {
-                "speech": "<s>La línea {{flag}} {{arrivesIn}}.</s>",
-                "text": "La línea {{flag}} {{arrivesIn}}."
-            },
-            "nextBus": {
-                "speech": "<s>El próximo {{arrivesIn}}.</s>",
-                "text": "El próximo {{arrivesIn}}."
-            }
+            "firstBus": "La línea {{flag}} {{arrivesIn}}.",
+            "nextBus": "El próximo {{arrivesIn}}."
         },
         "bus": {
             "arriving": "está llegando",

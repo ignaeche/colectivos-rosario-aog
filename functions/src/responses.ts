@@ -129,7 +129,7 @@ export const arrivals = {
         })
     },
     'foundTimes': (corner: Corner) => {
-        return createSimpleResponse('arrivals.foundTimes', {
+        return i18next.t('arrivals.foundTimes', {
             bus: corner.bus.name,
             street: corner.stop.street.desc,
             intersection: corner.stop.intersection.desc,
@@ -137,7 +137,7 @@ export const arrivals = {
         })
     },
     'times': (times: Map<string, BusArrival[]>) => {
-        const response: Array<Array<SimpleResponseOptions>> = []
+        const response: Array<Array<string>> = []
         Object.keys(times).forEach(flag => {
             const busArrivals: BusArrival[] = times[flag]
             const line = []
@@ -156,14 +156,29 @@ export const arrivals = {
             // Push line to final response
             response.push(line)
         })
-        const flatten = (key, inner, outer) => response.map(l => l.map(o => o[key]).join(inner)).join(outer)
-        return new SimpleResponse({
-            speech: wrapTag(flatten('speech', '', '<break time=\"400ms\"/>'), 'speak'),
-            text: flatten('text', ' ', ' ')
-        })
+        return {
+            speech: response.map(l => l.map(s => wrapTag(s, 's')).join('')).join('<break time=\"400ms\"/>'),
+            text: response.map(l => l.join(' ')).join('  \n')
+        }
     },
     'completeAnswer': (corner: Corner, times: Map<string, BusArrival[]>) => {
-        return [arrivals.foundTimes(corner), arrivals.times(times)]
+        const found = arrivals.foundTimes(corner)
+        const answer = arrivals.times(times)
+        const simple = new SimpleResponse({
+            // answer.speech is SSML, turn found into SSML, join with break and wrap in speak
+            speech: wrapTag([wrapTag(found, 's'), answer.speech].join('<break time=\"400ms\"/>'), 'speak'),
+            text: found
+        })
+        // Card, if location available show map
+        const options: BasicCardOptions = {
+            text: answer.text
+        }
+        if (corner.stop.location) {
+            options.image = stopMapImage(corner.stop)
+            options.display = 'CROPPED'
+        }
+        const card = new BasicCard(options)
+        return [simple, card]
     }
 }
 
