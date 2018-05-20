@@ -87,8 +87,10 @@
         "invalid": "Me temo que esa es una opción no válida",
         "none": "Lo siento pero ninguna opción fue seleccionada"
     },
-    "errorOccurred": "Lo siento. Ocurrió un error.",
-
+    "error": {
+        "sorry": ["Lo siento."],
+        "occurred": ["Ocurrió un error."]
+    },
     "location": {
         "permissionReason": "Para mostrar las paradas más cercanas",
         "searchPermissionReason": "Para buscar los horarios del {{bus}} en la parada más cercana",

@@ -87,7 +87,10 @@
         "invalid": "I'm afraid an invalid option was selected",
         "none": "I'm sorry but no option was selected"
     },
-    "errorOccurred": "I'm sorry. An error occurred.",
+    "error": {
+        "sorry": ["I'm sorry."],
+        "occurred": ["An error occurred."]
+    },
 
     "location": {
         "permissionReason": "To show the closest stops",

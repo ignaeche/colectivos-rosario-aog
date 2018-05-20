@@ -73,7 +73,8 @@ export const negatives = {
     },
     'generalError': () => {
         const response = [
-            i18next.t('errorOccurred'),
+            i18next.t('error.sorry'),
+            i18next.t('error.occurred'),
             i18next.t('goodbye.message')
         ]
         return new SimpleResponse(makeRandomResponse(response))
