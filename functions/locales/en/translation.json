@@ -41,7 +41,8 @@
 
     "length": {
         "invalid": {
-            "streets": "The street and the intersection must have {{length}} or more letters"
+            "streets": "The street and the intersection must have {{length}} or more letters",
+            "stop": "The stop number can only be {{length}} digits long"
         }
     },
 

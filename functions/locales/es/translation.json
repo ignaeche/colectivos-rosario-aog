@@ -41,7 +41,8 @@
 
     "length": {
         "invalid": {
-            "streets": "La calle y la intersección deben tener {{length}} o más letras"
+            "streets": "La calle y la intersección deben tener {{length}} o más letras",
+            "stop": "El número de parada solo puede tener {{length}} dígitos"
         }
     },
 

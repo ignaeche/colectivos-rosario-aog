@@ -11,6 +11,7 @@ import { getClosestStops, isInCity } from './location';
 import { SingleBusArrivalTime } from './arrivals';
 
 const STREET_MIN_LENGTH = 4
+const STOP_LENGTH = 4
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
@@ -33,7 +34,8 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
     conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
 
     if (street.length < STREET_MIN_LENGTH || intersection.length < STREET_MIN_LENGTH) {
-        conv.ask(responses.negatives.invalidLength(STREET_MIN_LENGTH))
+        conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
+        conv.ask(responses.negatives.invalidStreetLength(STREET_MIN_LENGTH))
         return conv.ask(responses.prompts.anythingElse())
     }
 
@@ -124,6 +126,12 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
     // If this intent is invoked then a stop-number-followup context is outputted
     // Remove corner-followup context in order for dialogflow to match followups to 'stop' intents
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
+
+    if (stop.length !== STOP_LENGTH) {
+        conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
+        conv.ask(responses.negatives.invalidStopLength(STOP_LENGTH))
+        return conv.ask(responses.prompts.anythingElse())
+    }
 
     try {
         // Get bus document
@@ -294,6 +302,12 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
     const payload = params[Parameters.PAYLOAD] as Payload
 
     conv.contexts.delete(AppContexts.CORNER_FOLLOWUP)
+
+    if (stop.length !== STOP_LENGTH) {
+        conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
+        conv.ask(responses.negatives.invalidStopLength(STOP_LENGTH))
+        return conv.ask(responses.prompts.anythingElse())
+    }
 
     try {
         const doc = await database.getStopDocument(db, stop)

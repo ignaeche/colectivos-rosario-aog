@@ -91,8 +91,11 @@ export const negatives = {
     'noOption': () => {
         return createSimpleResponse('options.none', undefined)
     },
-    'invalidLength': (length: number) => {
+    'invalidStreetLength': (length: number) => {
         return createSimpleResponse('length.invalid.streets', { length })
+    },
+    'invalidStopLength': (length: number) => {
+        return createSimpleResponse('length.invalid.stop', { length })
     }
 }
 
