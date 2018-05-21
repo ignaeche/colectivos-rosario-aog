@@ -25,11 +25,6 @@ export interface ArrivalTime {
     scheduled?: boolean
 }
 
-export interface ArrivalTranslation {
-    flag: string,
-    arrivesIn: string,
-}
-
 export interface Stop {
     number: string,
     street: Street,

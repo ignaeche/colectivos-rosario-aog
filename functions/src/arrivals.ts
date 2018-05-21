@@ -78,6 +78,7 @@ export class SingleBusArrivalTime {
     }
 }
 
+// tslint:disable-next-line
 class AllBusesArrivalTime {
     private static fetch(stop: string) {
         const formData = {

@@ -1,6 +1,6 @@
 import * as i18next from 'i18next';
-import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button, OptionItem, SimpleResponseOptions } from 'actions-on-google';
-import { BusArrival, ArrivalTranslation, Corner, ArrivalTime, Bus, Stop, Street } from './models';
+import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button, OptionItem } from 'actions-on-google';
+import { BusArrival, Corner, ArrivalTime, Bus, Stop } from './models';
 import { randomPop, takeRandom } from './util';
 import { getStopLocationImage, getStopMapsLink } from './maps';
 
