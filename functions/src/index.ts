@@ -325,6 +325,7 @@ app.intent(IntentGroups.STOP_INFORMATION_INTENTS, async (conv, params) => {
             conv.ask(...responses.rich.stop_card(data, payload && payload === 'ONE_STOP_FOUND'))
             conv.ask(new Suggestions(responses.suggestions.busesList(data.buses, 5)))
         } else {
+            conv.contexts.delete(AppContexts.STOP_FOLLOWUP)
             conv.ask(responses.welcome.suggestions())
             conv.ask(responses.negatives.nonExistentStop(stop))
         }
