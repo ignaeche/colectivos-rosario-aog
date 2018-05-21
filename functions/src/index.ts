@@ -81,7 +81,11 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             validCorners.forEach(corner => {
                 items[`STOP_${corner.stop.number}`] = responses.items.stop(corner.stop)
             });
-            conv.ask(i18next.t('stop.pickOne'))
+            if (!conv.screen) {
+                conv.ask(responses.sayList.stops(validCorners.map(c => c.stop)))
+            } else {
+                conv.ask(i18next.t('stop.pickOne'))
+            }
             return conv.ask(new List({
                 title: i18next.t('stops'),
                 items
@@ -198,7 +202,11 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
             const distance = locations.find(o => o.stop === stop.number).distanceInMeters
             items[`STOPINFO_${stop.number}`] = responses.items.stopDistanceAway(stop, distance)
         })
-        conv.ask(i18next.t('stop.foundThese'))
+        if (!conv.screen) {
+            conv.ask(responses.sayList.stops(stops))
+        } else {
+            conv.ask(i18next.t('stop.foundThese'))
+        }
         return conv.ask(new List({
             title: i18next.t('stops'),
             items

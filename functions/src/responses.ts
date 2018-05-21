@@ -122,6 +122,13 @@ export const items = {
     }
 }
 
+export const sayList = {
+    'stops': (stops: Stop[]) => {
+        const count = stops.length
+        return wrapTag(i18next.t('list.stops.speech', { count, stops }), 'speak')
+    }
+}
+
 export const arrivals = {
     'noneFound': (corner: Corner) => {
         return createSimpleResponse('arrivals.noneFound', {

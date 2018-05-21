@@ -103,6 +103,15 @@
         "buses": {
             "and": " y ",
             "article": "la {{value}}"
+        },
+        "stops": {
+            "and": " y ",
+            "article": "la parada {{stop.number}} en {{stop.street.desc}} y {{stop.intersection.desc}}"
+        }
+    },
+    "list": {
+        "stops": {
+            "speech": "<s>Encontré {{count}} paradas.</s><s>{{stops, joinStops}}</s><s>Escoja una diciendo su número.</s>"
         }
     },
 

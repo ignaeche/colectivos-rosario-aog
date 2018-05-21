@@ -104,6 +104,15 @@
         "buses": {
             "and": " and ",
             "article": "the {{value}}"
+        },
+        "stops": {
+            "and": " and ",
+            "article": "stop {{stop.number}} on {{stop.street.desc}} and {{stop.intersection.desc}}"
+        }
+    },
+    "list": {
+        "stops": {
+            "speech": "<s>I found {{count}} stops.</s><s>{{stops, joinStops}}</s><s>Pick one by saying its number.</s>"
         }
     },
 

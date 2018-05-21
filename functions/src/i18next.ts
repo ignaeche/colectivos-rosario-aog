@@ -23,6 +23,10 @@ i18next
                     const fn = v => i18next.t('joinArray.buses.article', { value: v })
                     return join(value, ', ', i18next.t('joinArray.buses.and'), null, null, fn)
                 }
+                if (format === 'joinStops') {
+                    const fn = v => i18next.t('joinArray.stops.article', { stop: v })
+                    return join(value, ', ', i18next.t('joinArray.stops.and'), null, null, fn)
+                }
                 if (format === 'count') {
                     return value.length
                 }
