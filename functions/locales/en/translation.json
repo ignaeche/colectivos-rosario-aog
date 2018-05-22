@@ -86,7 +86,7 @@
     },
 
     "suggestions": {
-        "otherBus": "Bus {{bus, shortenBus}}?",
+        "otherBus": "And {{bus, shortenBus}}?",
         "otherStop": "Stop {{stop}}?",
         "closestStop": "Closest stop?",
         "info": "Info on stop {{stop}}",
