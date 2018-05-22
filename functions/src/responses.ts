@@ -181,6 +181,8 @@ export const arrivals = {
         })
         // Card, if location available show map
         const options: BasicCardOptions = {
+            title: i18next.t('stop.number', { stop: corner.stop.number }),
+            subtitle: i18next.t('corner', { street: corner.stop.street.desc, intersection: corner.stop.intersection.desc }),
             text: answer.text
         }
         if (corner.stop.location) {
