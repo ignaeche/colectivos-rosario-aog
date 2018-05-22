@@ -20,7 +20,10 @@
     "stop": {
         "number": "Stop {{stop}}",
         "invalid": "I'm afraid stop {{stop}} is not a valid stop for bus {{bus}}",
-        "noneFoundOnCorner": "I didn't find any stops on the corner of {{street}} and {{intersection}} for bus {{bus}}",
+        "noneFoundOnCorner": {
+            "speech": "I didn't find any stops on the corner of {{street, lowercase}} and {{intersection, lowercase}} for bus {{bus}}",
+            "text": "I didn't find any stops on the corner of {{street}} and {{intersection}} for bus {{bus}}"
+        },
         "nonExistent": "I'm afraid stop {{stop}} does not exist",
         "noneNearYou": "I didn't find any stops near you",
         "noneNearYouForBus": "I didn't find any stops near you for bus {{bus}}",
@@ -28,7 +31,7 @@
         "foundThese": "I found these stops",
         "onlyOneNearYou": "I only found this stop near you",
         "card": {
-            "speech": "<speak><s>Stop {{stop.number}} is located on the corner of {{stop.street.desc}} and {{stop.intersection.desc}}.</s><s>$t(stop.servicedBy.bus, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
+            "speech": "<speak><s>Stop {{stop.number}} is located on the corner of {{stop.street.desc, lowercase}} and {{stop.intersection.desc, lowercase}}.</s><s>$t(stop.servicedBy.bus, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}.</s></speak>",
             "text": "Stop __{{stop.number}}__ is located on the corner of _{{stop.street.desc}}_ and _{{stop.intersection.desc}}_. $t(stop.servicedBy.bus, { 'count': {{stop.buses, count}} }) {{stop.buses, join}}."
         },
         "servicedBy": {
@@ -58,10 +61,16 @@
     "minutes_plural": "{{count}} minutes",
 
     "arrivals": {
-        "foundTimes": "I found the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}",
-        "noneFound": "I'm afraid I didn't find any arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}",
+        "foundTimes": {
+            "speech": "I found the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street, lowercase}} and {{intersection, lowercase}}",
+            "text": "I found the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}"
+        },
+        "noneFound": {
+            "speech": "I'm afraid I didn't find any arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street, lowercase}} and {{intersection, lowercase}}",
+            "text": "I'm afraid I didn't find any arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}"
+        },
         "sentences": {
-            "firstBus": "Bus line {{flag}} {{arrivesIn}}.",
+            "firstBus": "Bus line {{flag, fixFlag}} {{arrivesIn}}.",
             "nextBus": "The next bus {{arrivesIn}}."
         },
         "bus": {
@@ -77,7 +86,7 @@
     },
 
     "suggestions": {
-        "otherBus": "Bus {{bus}}?",
+        "otherBus": "Bus {{bus, shortenBus}}?",
         "otherStop": "Stop {{stop}}?",
         "closestStop": "Closest stop?",
         "info": "Info on stop {{stop}}",
@@ -107,7 +116,7 @@
         },
         "stops": {
             "and": " and ",
-            "article": "stop {{stop.number}} on {{stop.street.desc}} and {{stop.intersection.desc}}"
+            "article": "stop {{stop.number}} on {{stop.street.desc, lowercase}} and {{stop.intersection.desc, lowercase}}"
         }
     },
     "list": {

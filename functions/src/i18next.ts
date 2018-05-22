@@ -6,7 +6,7 @@ const join = require('join-array')
 i18next
     .use(backend)
     .init({
-        debug: true,
+        debug: false,
         initImmediate: false,
         load: 'languageOnly', // load languages without region consideration
         lng: 'es',
@@ -19,6 +19,19 @@ i18next
         },
         interpolation: {
             format: function (value, format, lng) {
+                if (format === 'lowercase') {
+                    return value.toLowerCase()
+                }
+                if (format === 'fixFlag') {
+                    const replacements = {
+                        'UNICO': 'ÚNICO'
+                    }
+                    let result = value
+                    Object.keys(replacements).forEach(key => {
+                        result = result.replace(key, replacements[key])
+                    })
+                    return result
+                }
                 if (format === 'join') {
                     const fn = v => i18next.t('joinArray.buses.article', { value: v })
                     return join(value, ', ', i18next.t('joinArray.buses.and'), null, null, fn)
@@ -29,6 +42,15 @@ i18next
                 }
                 if (format === 'count') {
                     return value.length
+                }
+                if (format === 'shortenBus') {
+                    // quick hack to shorten bus name in suggestion chip
+                    const strip = [' OESTE']
+                    let result = value
+                    strip.forEach(r => {
+                        result = result.replace(r, '')
+                    })
+                    return result
                 }
                 return value
             }

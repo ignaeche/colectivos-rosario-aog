@@ -1,5 +1,5 @@
 import * as i18next from 'i18next';
-import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button, OptionItem } from 'actions-on-google';
+import { SimpleResponse, Suggestions, BasicCard, BasicCardOptions, Image, Button, OptionItem, SimpleResponseOptions } from 'actions-on-google';
 import { BusArrival, Corner, ArrivalTime, Bus, Stop } from './models';
 import { randomPop, takeRandom } from './util';
 import { getStopLocationImage, getStopMapsLink } from './maps';
@@ -138,7 +138,7 @@ export const arrivals = {
             stop: corner.stop.number
         })
     },
-    'foundTimes': (corner: Corner) => {
+    'foundTimes': (corner: Corner): SimpleResponseOptions => {
         return i18next.t('arrivals.foundTimes', {
             bus: corner.bus.name,
             street: corner.stop.street.desc,
@@ -167,7 +167,7 @@ export const arrivals = {
             response.push(line)
         })
         return {
-            speech: response.map(l => l.map(s => wrapTag(s, 's')).join('')).join('<break time=\"200ms\"/>'),
+            speech: response.map(l => l.map(s => wrapTag(s, 's')).join('')).join('<break time=\"200ms\"/>').toLowerCase(),
             text: response.map(l => l.join(' ')).join('  \n')
         }
     },
@@ -176,8 +176,8 @@ export const arrivals = {
         const answer = arrivals.times(times)
         const simple = new SimpleResponse({
             // answer.speech is SSML, turn found into SSML, join with break and wrap in speak
-            speech: wrapTag([wrapTag(found, 's'), answer.speech].join('<break time=\"200ms\"/>'), 'speak'),
-            text: found
+            speech: wrapTag([wrapTag(found.speech, 's'), answer.speech].join('<break time=\"200ms\"/>'), 'speak'),
+            text: found.text
         })
         // Card, if location available show map
         const options: BasicCardOptions = {
@@ -217,14 +217,18 @@ export const rich = {
     }
 }
 
+const CHIP_MAX_LENGTH = 25
+
 export const suggestions = {
     'busesList': (buses: Array<string>, howMany: number) => {
         const list = takeRandom(buses, howMany)
         return list.sort().map(bus => i18next.t('suggestions.otherBus', { bus }))
+            .filter(s => s.length <= CHIP_MAX_LENGTH)
     },
     'stopsList': (stops: Array<string>, howMany: number) => {
         const list = takeRandom(stops, howMany)
         return list.sort().map(stop => i18next.t('suggestions.otherStop', { stop }))
+            .filter(s => s.length <= CHIP_MAX_LENGTH)
     },
     'closestStop': () => {
         return i18next.t('suggestions.closestStop')
