@@ -167,7 +167,7 @@ export const arrivals = {
             response.push(line)
         })
         return {
-            speech: response.map(l => l.map(s => wrapTag(s, 's')).join('')).join('<break time=\"400ms\"/>'),
+            speech: response.map(l => l.map(s => wrapTag(s, 's')).join('')).join('<break time=\"200ms\"/>'),
             text: response.map(l => l.join(' ')).join('  \n')
         }
     },
@@ -176,7 +176,7 @@ export const arrivals = {
         const answer = arrivals.times(times)
         const simple = new SimpleResponse({
             // answer.speech is SSML, turn found into SSML, join with break and wrap in speak
-            speech: wrapTag([wrapTag(found, 's'), answer.speech].join('<break time=\"400ms\"/>'), 'speak'),
+            speech: wrapTag([wrapTag(found, 's'), answer.speech].join('<break time=\"200ms\"/>'), 'speak'),
             text: found
         })
         // Card, if location available show map
