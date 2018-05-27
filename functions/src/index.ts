@@ -174,7 +174,7 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
 const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Contexts>) => {
     try {
         // @ts-ignore: Property does not exist
-        const { coordinates } = conv.data
+        const { coordinates } = conv.device.location
         if (!isInCity(coordinates)) {
             conv.ask(responses.negatives.notInCity())
             return conv.ask(responses.prompts.anythingElse())
@@ -220,7 +220,7 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
 const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>) => {
     try {
         // @ts-ignore: Property does not exist
-        const { coordinates } = conv.data
+        const { coordinates } = conv.device.location
         if (!isInCity(coordinates)) {
             conv.ask(responses.negatives.notInCity())
             return conv.ask(responses.prompts.anythingElse())
@@ -253,8 +253,8 @@ const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>)
 }
 
 app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
-    // @ts-ignore: Property does not exist
-    if (!conv.data.coordinates) {
+    // Ask permission if location not available
+    if (!conv.device.location) {
         // @ts-ignore: Property does not exist
         conv.data.locationAction = conv.action
         return conv.ask(new Permission({
@@ -268,8 +268,8 @@ app.intent(Intents.CLOSEST_STOPS_INTENT, async conv => {
 
 app.intent(IntentGroups.CLOSEST_STOP_INTENTS, (conv, params) => {
     const bus = params[Parameters.BUS_LINE]
-    // @ts-ignore: Property does not exist
-    if (!conv.data.coordinates) {
+    // Ask permission if location not available
+    if (!conv.device.location) {
         // @ts-ignore: Property does not exist
         conv.data.locationAction = conv.action
         return conv.ask(new Permission({
@@ -284,11 +284,8 @@ app.intent(IntentGroups.CLOSEST_STOP_INTENTS, (conv, params) => {
 app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
     if (granted) {
         // Location was granted, answer according to action from requesting intent (saved in conv.data)
-        const { coordinates } = conv.device.location
         // @ts-ignore: Property does not exit
         const action = conv.data.locationAction
-        // @ts-ignore: Property does not exit
-        conv.data.coordinates = coordinates
         switch (action) {
             case Actions.STOPS_CLOSEST:
                 return showStopLocationList(conv)
