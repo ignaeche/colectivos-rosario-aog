@@ -11,16 +11,16 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "actions-on-google": "^2.1.1",
+    "actions-on-google": "^2.1.2",
     "firebase-admin": "^5.12.1",
-    "firebase-functions": "^1.0.2",
+    "firebase-functions": "^1.0.3",
     "geofire": "^4.1.2",
     "i18next": "^11.3.2",
     "i18next-sync-fs-backend": "^1.1.0",
     "join-array": "^1.1.1",
-    "jsdom": "^11.10.0",
+    "jsdom": "^11.11.0",
     "remove-accents": "^0.4.2",
-    "request": "^2.86.0",
+    "request": "^2.87.0",
     "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
