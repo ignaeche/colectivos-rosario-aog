@@ -69,6 +69,10 @@
             "speech": "I'm afraid I didn't find any arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street, lowercase}} and {{intersection, lowercase}}",
             "text": "I'm afraid I didn't find any arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}"
         },
+        "timeout": {
+            "speech": "I wasn't able to retrieve the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street, lowercase}} and {{intersection, lowercase}}",
+            "text": "I wasn't able to retrieve the arrival times for bus {{bus}} and stop {{stop}} on the corner of {{street}} and {{intersection}}"
+        },
         "sentences": {
             "firstBus": "Bus line {{flag, fixFlag}} {{arrivesIn}}.",
             "nextBus": "The next bus {{arrivesIn}}."

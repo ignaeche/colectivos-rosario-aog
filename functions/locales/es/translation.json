@@ -69,6 +69,10 @@
             "speech": "Me temo que no encontré horarios para la línea {{bus}} en la parada {{stop}} de {{street, lowercase}} y {{intersection, lowercase}}",
             "text": "Me temo que no encontré horarios para la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}"
         },
+        "timeout": {
+            "speech": "No pude consultar los horarios para la línea {{bus}} en la parada {{stop}} de {{street, lowercase}} y {{intersection, lowercase}}",
+            "text": "No pude consultar los horarios para la línea {{bus}} en la parada {{stop}} de {{street}} y {{intersection}}"
+        },
         "sentences": {
             "firstBus": "La línea {{flag, fixFlag}} {{arrivesIn}}.",
             "nextBus": "El próximo {{arrivesIn}}."

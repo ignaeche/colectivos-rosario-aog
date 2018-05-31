@@ -3,6 +3,8 @@ import { Response } from 'request';
 import { JSDOM } from 'jsdom';
 import { Bus, BusArrival, ArrivalTime } from './models';
 
+const REQUEST_TIMEOUT = 4500
+
 export class SingleBusArrivalTime {
     private static fetch(bus: Bus, stop: string) {
         const formData = {
@@ -18,7 +20,8 @@ export class SingleBusArrivalTime {
             form: formData,
             resolveWithFullResponse: true,
             time: true,
-            gzip: true
+            gzip: true,
+            timeout: REQUEST_TIMEOUT
         }
         return request(options)
     }
@@ -72,8 +75,8 @@ export class SingleBusArrivalTime {
             console.log(`Arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
             return SingleBusArrivalTime.process(response.body)
         } catch (error) {
-            console.error(error)
-            return 'NO_ARRIVALS'
+            console.log(`Arrival time request failed: ${error.message}`)
+            return 'NO_ARRIVALS_ERROR'
         }
     }
 }
@@ -90,7 +93,8 @@ class AllBusesArrivalTime {
             form: formData,
             resolveWithFullResponse: true,
             time: true,
-            gzip: true
+            gzip: true,
+            timeout: REQUEST_TIMEOUT
         }
         return request(options)
     }
@@ -143,8 +147,8 @@ class AllBusesArrivalTime {
             console.log(`All buses arrival time request: code ${response.statusCode}, elapsed ${response.elapsedTime}`)
             return AllBusesArrivalTime.process(response.body)
         } catch (error) {
-            console.error(error)
-            return 'NO_ARRIVALS'
+            console.log(`Arrival time request failed: ${error.message}`)
+            return 'NO_ARRIVALS_ERROR'
         }
     }
 }

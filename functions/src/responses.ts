@@ -138,6 +138,14 @@ export const arrivals = {
             stop: corner.stop.number
         })
     },
+    'timeout': (corner: Corner) => {
+        return createSimpleResponse('arrivals.timeout', {
+            bus: corner.bus.name,
+            street: corner.stop.street.desc,
+            intersection: corner.stop.intersection.desc,
+            stop: corner.stop.number
+        })
+    },
     'foundTimes': (corner: Corner): SimpleResponseOptions => {
         return i18next.t('arrivals.foundTimes', {
             bus: corner.bus.name,

@@ -71,6 +71,8 @@ app.intent(IntentGroups.CORNER_INTENTS, async (conv, params) => {
             // Return response
             if (arrival === 'NO_ARRIVALS') {
                 conv.ask(responses.arrivals.noneFound(corner))
+            } else if (arrival === 'NO_ARRIVALS_ERROR') {
+                conv.ask(responses.arrivals.timeout(corner))
             } else {
                 conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
@@ -155,6 +157,8 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
             conv.ask(responses.suggestions.stop(corner.stop))
             if (arrival === 'NO_ARRIVALS') {
                 conv.ask(responses.arrivals.noneFound(corner))
+            } else if (arrival === 'NO_ARRIVALS_ERROR') {
+                conv.ask(responses.arrivals.timeout(corner))
             } else {
                 conv.ask(...responses.arrivals.completeAnswer(corner, arrival))
             }
