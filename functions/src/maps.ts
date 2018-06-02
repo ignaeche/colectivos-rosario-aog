@@ -9,7 +9,7 @@ const STATIC_MAPS_SIZE = {
     LIST_SIZE: '144x144'
 }
 
-const retroStyle = [
+const RETRO_STYLE = [
     "element:geometry|color:0xebe3cd",
     "feature:poi|element:geometry|color:0xdfd2ae",
     "feature:poi.park|element:geometry.fill|color:0xa5b076",
@@ -34,10 +34,10 @@ export function getStopLocationImage(coordinates: FirebaseFirestore.GeoPoint, la
         markers: coords
     }
     if (size === 'CARD_SIZE' || size === 'BIG_SIZE') {
-        uri.query.style = ['feature:poi|element:labels.text|visibility:off'].concat(retroStyle)
+        uri.query.style = ['feature:poi|element:labels.text|visibility:off'].concat(RETRO_STYLE)
     }
     if (size === 'LIST_SIZE') {
-        uri.query.style = ['feature:poi|element:labels|visibility:off'].concat(retroStyle)
+        uri.query.style = ['feature:poi|element:labels|visibility:off'].concat(RETRO_STYLE)
     }
     return sign(url.format(uri), functions.config().maps.secret)
 }

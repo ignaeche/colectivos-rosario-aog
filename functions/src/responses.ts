@@ -4,7 +4,7 @@ import { BusArrival, Corner, ArrivalTime, Bus, Stop } from './models';
 import { randomPop, takeRandom } from './util';
 import { getStopLocationImage, getStopMapsLink } from './maps';
 
-function createSimpleResponse(key: string, data) {
+function createSimpleResponse(key: string, data?) {
     return new SimpleResponse(i18next.t(key, data))
 }
 
@@ -66,7 +66,7 @@ export const negatives = {
         return createSimpleResponse('stop.nonExistent', { stop })
     },
     'noStopsNearYou': () => {
-        return createSimpleResponse('stop.noneNearYou', undefined)
+        return createSimpleResponse('stop.noneNearYou')
     },
     'noStopsNearYouForBus': (bus: string) => {
         return createSimpleResponse('stop.noneNearYouForBus', { bus })
@@ -80,16 +80,16 @@ export const negatives = {
         return new SimpleResponse(makeRandomResponse(response))
     },
     'locationNotGranted': () => {
-        return createSimpleResponse('location.couldntAccess', undefined)
+        return createSimpleResponse('location.couldntAccess')
     },
     'notInCity': () => {
-        return createSimpleResponse('location.notInCity', undefined)
+        return createSimpleResponse('location.notInCity')
     },
     'invalidOption': () => {
-        return createSimpleResponse('options.invalid', undefined)
+        return createSimpleResponse('options.invalid')
     },
     'noOption': () => {
-        return createSimpleResponse('options.none', undefined)
+        return createSimpleResponse('options.none')
     },
     'invalidStreetLength': (length: number) => {
         return createSimpleResponse('length.invalid.streets', { length })

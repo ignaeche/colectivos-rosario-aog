@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin'
 import { GoogleTypeLatLng } from 'actions-on-google';
 import { StopLocation } from './models';
-// import * as util from 'util'
 const GeoFire = require('geofire')
 
 const QUERY_LIMIT = 6
@@ -42,7 +41,6 @@ function getClosestStopsCallback(db: admin.database.Database, coordinates: Googl
     }
 }
 
-// export const getClosestStops = util.promisify<admin.database.Database, GoogleTypeLatLng, Array<any>>(getClosestStopsCallback)
 export const getClosestStops = (db, coords, limit = QUERY_LIMIT) => {
     return new Promise<Array<StopLocation>>((resolve, reject) => {
         getClosestStopsCallback(db, coords, limit, (err, data) => {

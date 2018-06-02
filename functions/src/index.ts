@@ -177,7 +177,6 @@ app.intent(IntentGroups.STOP_INTENTS, async (conv, params) => {
 
 const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Contexts>) => {
     try {
-        // @ts-ignore: Property does not exist
         const { coordinates } = conv.device.location
         if (!isInCity(coordinates)) {
             conv.ask(responses.negatives.notInCity())
@@ -223,7 +222,6 @@ const showStopLocationList = async (conv: DialogflowConversation<{}, {}, Context
 
 const searchClosestStop = async (conv: DialogflowConversation<{}, {}, Contexts>) => {
     try {
-        // @ts-ignore: Property does not exist
         const { coordinates } = conv.device.location
         if (!isInCity(coordinates)) {
             conv.ask(responses.negatives.notInCity())
@@ -288,7 +286,7 @@ app.intent(IntentGroups.CLOSEST_STOP_INTENTS, (conv, params) => {
 app.intent(Intents.HANDLE_PERMISSION_INTENT, async (conv, params, granted) => {
     if (granted) {
         // Location was granted, answer according to action from requesting intent (saved in conv.data)
-        // @ts-ignore: Property does not exit
+        // @ts-ignore: Property does not exist
         const action = conv.data.locationAction
         switch (action) {
             case Actions.STOPS_CLOSEST:
