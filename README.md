@@ -20,7 +20,7 @@ You can, for example:
   - Cloud Functions for the webhook in Dialogflow
   - Cloud Firestore to store bus, street and stop information
   - Realtime Database for geoqueries (since geoqueries are not exposed in Firestore at the time of development)
-- [Typescript](https://www.typescriptlang.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [i18next](https://www.i18next.com/) for localization
 - and more...
 
@@ -46,7 +46,7 @@ npm install -g firebase-tools
 firebase login
 firebase init
 ```
-6. Deploy and get the URL of your cloud function and paste it in the _Fulfillment > Webhook_ section of Dialogflow.
+5. Deploy and get the URL of your cloud function and paste it in the _Fulfillment > Webhook_ section of Dialogflow.
 ```
 npm run deploy
 ```

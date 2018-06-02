@@ -20,7 +20,7 @@ Por ejemplo, puedes:
   - Cloud Functions para el webhook en Dialogflow
   - Cloud Firestore para guardar la información de colectivos, calles y paradas
   - Realtime Database para las búsquedas por ubicación (debido a que las geoqueries todavía no están disponibles en Firestore)
-- [Typescript](https://www.typescriptlang.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [i18next](https://www.i18next.com/) para la localización
 - y más...
 
